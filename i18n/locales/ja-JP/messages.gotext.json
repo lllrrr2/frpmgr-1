@@ -167,6 +167,31 @@
             "translation": "キャンセル"
         },
         {
+            "id": "Name",
+            "message": "Name",
+            "translation": "名前"
+        },
+        {
+            "id": "Value",
+            "message": "Value",
+            "translation": "値"
+        },
+        {
+            "id": "Add",
+            "message": "Add",
+            "translation": "追加"
+        },
+        {
+            "id": "Delete",
+            "message": "Delete",
+            "translation": "削除"
+        },
+        {
+            "id": "Clear All",
+            "message": "Clear All",
+            "translation": "すべてクリア"
+        },
+        {
             "id": "Configuration",
             "message": "Configuration",
             "translation": "設定"
@@ -232,6 +257,11 @@
             "translation": "共通設定のみ"
         },
         {
+            "id": "Import Config",
+            "message": "Import Config",
+            "translation": "設定のインポート"
+        },
+        {
             "id": "Import from File",
             "message": "Import from File",
             "translation": "ファイルからインポート"
@@ -247,6 +277,11 @@
             "translation": "クリップボードからインポート"
         },
         {
+            "id": "NAT Discovery",
+            "message": "NAT Discovery",
+            "translation": "NAT 検出"
+        },
+        {
             "id": "Copy Share Link",
             "message": "Copy Share Link",
             "translation": "共有リンクをコピー"
@@ -257,11 +292,6 @@
             "translation": "すべての設定をZIPにエクスポート"
         },
         {
-            "id": "Delete",
-            "message": "Delete",
-            "translation": "削除"
-        },
-        {
             "id": "New Config",
             "message": "New Config",
             "translation": "新しい設定"
@@ -270,11 +300,6 @@
             "id": "Manual Settings",
             "message": "Manual Settings",
             "translation": "手動設定"
-        },
-        {
-            "id": "Import Config",
-            "message": "Import Config",
-            "translation": "設定のインポート"
         },
         {
             "id": "Imported {Imported} of {Total} configs.",
@@ -312,7 +337,7 @@
         {
             "id": "Another config already exists with the name \"{BaseName}\".",
             "message": "Another config already exists with the name \"{BaseName}\".",
-            "translation": "\"{BaseName}\" という名前の別の設定が既に存在します。",
+            "translation": "「{BaseName}」という名前の別の設定が既に存在します。",
             "placeholders": [
                 {
                     "id": "BaseName",
@@ -327,7 +352,7 @@
         {
             "id": "The file \"{Path}\" is not a valid ZIP file.",
             "message": "The file \"{Path}\" is not a valid ZIP file.",
-            "translation": "ファイル \"{Path}\" は有効なZIPファイルではありません。",
+            "translation": "ファイル「{Path}」は有効な ZIP ファイルではありません。",
             "placeholders": [
                 {
                     "id": "Path",
@@ -342,7 +367,7 @@
         {
             "id": "Delete config \"{Name}\"",
             "message": "Delete config \"{Name}\"",
-            "translation": "設定 \"{Name}\" を削除",
+            "translation": "設定「{Name}」を削除",
             "placeholders": [
                 {
                     "id": "Name",
@@ -357,7 +382,7 @@
         {
             "id": "Are you sure you would like to delete config \"{Name}\"?",
             "message": "Are you sure you would like to delete config \"{Name}\"?",
-            "translation": "本当に設定 \"{Name}\" を削除しますか？",
+            "translation": "設定「{Name}」を削除してもよろしいですか?",
             "placeholders": [
                 {
                     "id": "Name",
@@ -395,11 +420,6 @@
             "translation": "基本"
         },
         {
-            "id": "Name",
-            "message": "Name",
-            "translation": "名前"
-        },
-        {
             "id": "Server Address",
             "message": "Server Address",
             "translation": "サーバーアドレス"
@@ -413,6 +433,11 @@
             "id": "User",
             "message": "User",
             "translation": "ユーザー"
+        },
+        {
+            "id": "STUN Server",
+            "message": "STUN Server",
+            "translation": "STUNサーバー"
         },
         {
             "id": "Auth",
@@ -455,9 +480,9 @@
             "translation": "トークンのURL"
         },
         {
-            "id": "Authentication",
-            "message": "Authentication",
-            "translation": "認証"
+            "id": "Parameters",
+            "message": "Parameters",
+            "translation": "パラメーター"
         },
         {
             "id": "Heart Beats",
@@ -500,6 +525,11 @@
             "translation": "最大日数"
         },
         {
+            "id": "Days",
+            "message": "Days",
+            "translation": "日"
+        },
+        {
             "id": "Admin",
             "message": "Admin",
             "translation": "管理者"
@@ -508,11 +538,6 @@
             "id": "Admin Address",
             "message": "Admin Address",
             "translation": "管理者アドレス"
-        },
-        {
-            "id": "Admin Port",
-            "message": "Admin Port",
-            "translation": "管理ポート"
         },
         {
             "id": "Password",
@@ -528,6 +553,11 @@
             "id": "Select a local directory that the admin server will load resources from.",
             "message": "Select a local directory that the admin server will load resources from.",
             "translation": "管理サーバーがリソースをロードするローカルディレクトリを選択します。"
+        },
+        {
+            "id": "Other Options",
+            "message": "Other Options",
+            "translation": "別のオプション"
         },
         {
             "id": "Auto Delete",
@@ -555,9 +585,9 @@
             "translation": "日を削除"
         },
         {
-            "id": "Days",
-            "message": "Days",
-            "translation": "日"
+            "id": "s",
+            "message": "s",
+            "translation": "s"
         },
         {
             "id": "Connection",
@@ -570,34 +600,9 @@
             "translation": "プロトコル"
         },
         {
-            "id": "HTTP Proxy",
-            "message": "HTTP Proxy",
-            "translation": "HTTP プロキシ"
-        },
-        {
-            "id": "Pool Count",
-            "message": "Pool Count",
-            "translation": "接続プールの数"
-        },
-        {
-            "id": "Heartbeat",
-            "message": "Heartbeat",
-            "translation": "ハートビート"
-        },
-        {
-            "id": "Interval",
-            "message": "Interval",
-            "translation": "間隔"
-        },
-        {
-            "id": "s",
-            "message": "s",
-            "translation": "s"
-        },
-        {
-            "id": "Timeout",
-            "message": "Timeout",
-            "translation": "タイムアウト"
+            "id": "Advanced Options",
+            "message": "Advanced Options",
+            "translation": "高度なオプション"
         },
         {
             "id": "Dial Timeout",
@@ -615,9 +620,29 @@
             "translation": "アイドルタイムアウト"
         },
         {
+            "id": "Pool Count",
+            "message": "Pool Count",
+            "translation": "接続プールの数"
+        },
+        {
             "id": "Max Streams",
             "message": "Max Streams",
             "translation": "最大ストリーム"
+        },
+        {
+            "id": "Heartbeat",
+            "message": "Heartbeat",
+            "translation": "ハートビート"
+        },
+        {
+            "id": "Interval",
+            "message": "Interval",
+            "translation": "間隔"
+        },
+        {
+            "id": "Timeout",
+            "message": "Timeout",
+            "translation": "タイムアウト"
         },
         {
             "id": "On",
@@ -665,19 +690,14 @@
             "translation": "信頼できる CA ファイルを選択します"
         },
         {
+            "id": "Disable custom first byte",
+            "message": "Disable custom first byte",
+            "translation": "カスタムの先頭バイトを無効にする"
+        },
+        {
             "id": "Advanced",
             "message": "Advanced",
             "translation": "高度"
-        },
-        {
-            "id": "TCP Mux",
-            "message": "TCP Mux",
-            "translation": "多重化"
-        },
-        {
-            "id": "Mux Keepalive",
-            "message": "Mux Keepalive",
-            "translation": "多重化接続を維持"
         },
         {
             "id": "Source Address",
@@ -685,9 +705,9 @@
             "translation": "送信元アドレス"
         },
         {
-            "id": "Other Options",
-            "message": "Other Options",
-            "translation": "別のオプション"
+            "id": "TCP Mux",
+            "message": "TCP Mux",
+            "translation": "多重化"
         },
         {
             "id": "Exit after login failure",
@@ -700,19 +720,39 @@
             "translation": "起動時に自動起動を無効にする"
         },
         {
-            "id": "Custom",
-            "message": "Custom",
-            "translation": "カスタム"
+            "id": "Use legacy format config file",
+            "message": "Use legacy format config file",
+            "translation": "従来の形式の設定ファイルを使用する"
         },
         {
-            "id": "Custom Options",
-            "message": "Custom Options",
-            "translation": "カスタムオプション"
+            "id": "Metadata",
+            "message": "Metadata",
+            "translation": "メタデータ"
         },
         {
-            "id": "* Refer to the [common] section of the FRP configuration file.",
-            "message": "* Refer to the [common] section of the FRP configuration file.",
-            "translation": "* FRP 設定ファイルの [common] セクションを参照してください。"
+            "id": "Experimental Features",
+            "message": "Experimental Features",
+            "translation": "実験的な機能"
+        },
+        {
+            "id": "* The following features may affect the stability of the service.",
+            "message": "* The following features may affect the stability of the service.",
+            "translation": "* 以下の機能はサービスの安定性に影響を与える可能性があります。"
+        },
+        {
+            "id": "Use server SVCB records",
+            "message": "Use server SVCB records",
+            "translation": "サーバーSVCBレコードを使用する"
+        },
+        {
+            "id": "HTTP Proxy",
+            "message": "HTTP Proxy",
+            "translation": "HTTP プロキシ"
+        },
+        {
+            "id": "UDP Packet Size",
+            "message": "UDP Packet Size",
+            "translation": "UDPパケットサイズ"
         },
         {
             "id": "Config already exists",
@@ -722,7 +762,7 @@
         {
             "id": "The config name \"{Name}\" already exists.",
             "message": "The config name \"{Name}\" already exists.",
-            "translation": "設定名 \"{Name}\" は既に存在します。",
+            "translation": "設定名「{Name}」はすでに存在します。",
             "placeholders": [
                 {
                     "id": "Name",
@@ -731,6 +771,21 @@
                     "underlyingType": "string",
                     "argNum": 1,
                     "expr": "name"
+                }
+            ]
+        },
+        {
+            "id": "Unable to upgrade your config file due to proxy conversion failure, please check the proxy config and try again.\n\nBad proxy: {Name}",
+            "message": "Unable to upgrade your config file due to proxy conversion failure, please check the proxy config and try again.\n\nBad proxy: {Name}",
+            "translation": "プロキシ変換が失敗したため、設定ファイルをアップグレードできません。プロキシ設定を確認して、もう一度試してください。\n\n不正なプロキシ: {Name}",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "v.Name"
                 }
             ]
         },
@@ -755,6 +810,11 @@
             ]
         },
         {
+            "id": "Annotations",
+            "message": "Annotations",
+            "translation": "注釈"
+        },
+        {
             "id": "Random",
             "message": "Random",
             "translation": "ランダム"
@@ -765,9 +825,24 @@
             "translation": "タイプ"
         },
         {
+            "id": "Request headers",
+            "message": "Request headers",
+            "translation": "リクエストヘッダー"
+        },
+        {
+            "id": "Response headers",
+            "message": "Response headers",
+            "translation": "レスポンスヘッダー"
+        },
+        {
             "id": "Role",
             "message": "Role",
             "translation": "役割"
+        },
+        {
+            "id": "Server",
+            "message": "Server",
+            "translation": "サーバ"
         },
         {
             "id": "Visitor",
@@ -795,6 +870,11 @@
             "translation": "リモートポート"
         },
         {
+            "id": "Allow Users",
+            "message": "Allow Users",
+            "translation": "ユーザーを許可する"
+        },
+        {
             "id": "Bind Address",
             "message": "Bind Address",
             "translation": "バインドアドレス"
@@ -808,6 +888,11 @@
             "id": "Server Name",
             "message": "Server Name",
             "translation": "サーバー名"
+        },
+        {
+            "id": "Server User",
+            "message": "Server User",
+            "translation": "サーバーユーザー"
         },
         {
             "id": "Subdomain",
@@ -840,24 +925,29 @@
             "translation": "クライアント"
         },
         {
-            "id": "Server",
-            "message": "Server",
-            "translation": "サーバ"
-        },
-        {
             "id": "Bandwidth",
             "message": "Bandwidth",
             "translation": "帯域幅"
         },
         {
-            "id": "Proxy Version",
-            "message": "Proxy Version",
-            "translation": "プロキシ版"
+            "id": "Proxy Protocol",
+            "message": "Proxy Protocol",
+            "translation": "プロキシプロトコル"
         },
         {
-            "id": "Empty",
-            "message": "Empty",
-            "translation": "空"
+            "id": "auto",
+            "message": "auto",
+            "translation": "自動"
+        },
+        {
+            "id": "default",
+            "message": "default",
+            "translation": "既定値"
+        },
+        {
+            "id": "Keep Tunnel",
+            "message": "Keep Tunnel",
+            "translation": "トンネルを維持する"
         },
         {
             "id": "Encryption",
@@ -868,6 +958,36 @@
             "id": "Compression",
             "message": "Compression",
             "translation": "圧縮"
+        },
+        {
+            "id": "Fallback",
+            "message": "Fallback",
+            "translation": "代替"
+        },
+        {
+            "id": "Fallback Timeout",
+            "message": "Fallback Timeout",
+            "translation": "フォールバックタイムアウト"
+        },
+        {
+            "id": "ms",
+            "message": "ms",
+            "translation": "ミリ秒"
+        },
+        {
+            "id": "Retry Count",
+            "message": "Retry Count",
+            "translation": "リトライ回数"
+        },
+        {
+            "id": "Times/Hour",
+            "message": "Times/Hour",
+            "translation": "回/時間"
+        },
+        {
+            "id": "Retry Interval",
+            "message": "Retry Interval",
+            "translation": "再試行間隔"
         },
         {
             "id": "HTTP User",
@@ -950,19 +1070,14 @@
             "translation": "タイムアウト"
         },
         {
-            "id": "Failure Count",
-            "message": "Failure Count",
-            "translation": "失敗数"
-        },
-        {
             "id": "Check Interval",
             "message": "Check Interval",
             "translation": "チェック間隔"
         },
         {
-            "id": "* Refer to the parameters supported by FRP.",
-            "message": "* Refer to the parameters supported by FRP.",
-            "translation": "* FRP 対応のパラメータをご参照ください。"
+            "id": "Failure Count",
+            "message": "Failure Count",
+            "translation": "失敗数"
         },
         {
             "id": "Proxy already exists",
@@ -972,7 +1087,7 @@
         {
             "id": "The proxy name \"{Name}\" already exists.",
             "message": "The proxy name \"{Name}\" already exists.",
-            "translation": "プロキシ名 \"{Name}\" は既に存在します。",
+            "translation": "プロキシ名「{Name}」はすでに存在します。",
             "placeholders": [
                 {
                     "id": "Name",
@@ -985,6 +1100,76 @@
             ]
         },
         {
+            "id": "Server name is required.",
+            "message": "Server name is required.",
+            "translation": "サービス名は必須です。"
+        },
+        {
+            "id": "Bind port is required.",
+            "message": "Bind port is required.",
+            "translation": "バインドポートは必須です。"
+        },
+        {
+            "id": "Requires local port or plugin.",
+            "message": "Requires local port or plugin.",
+            "translation": "ローカルポートまたはプラグインが必要です。"
+        },
+        {
+            "id": "Local address is required.",
+            "message": "Local address is required.",
+            "translation": "ローカルアドレスは必須です。"
+        },
+        {
+            "id": "Local path is required.",
+            "message": "Local path is required.",
+            "translation": "ローカルパスは必須です。"
+        },
+        {
+            "id": "Unix path is required.",
+            "message": "Unix path is required.",
+            "translation": "Unix パスは必須です。"
+        },
+        {
+            "id": "Invalid local port.",
+            "message": "Invalid local port.",
+            "translation": "ローカルポートが無効です。"
+        },
+        {
+            "id": "Health check url is required.",
+            "message": "Health check url is required.",
+            "translation": "ヘルスチェックのURLは必須です。"
+        },
+        {
+            "id": "The plugin does not support range ports.",
+            "message": "The plugin does not support range ports.",
+            "translation": "プラグインは範囲ポートをサポートしていません。"
+        },
+        {
+            "id": "Invalid remote port.",
+            "message": "Invalid remote port.",
+            "translation": "無効なリモートポートです。"
+        },
+        {
+            "id": "The number of local ports should be the same as the number of remote ports.",
+            "message": "The number of local ports should be the same as the number of remote ports.",
+            "translation": "ローカル ポートの数はリモート ポートの数と同じである必要があります。"
+        },
+        {
+            "id": "Custom domains and subdomain should have at least one of these set.",
+            "message": "Custom domains and subdomain should have at least one of these set.",
+            "translation": "カスタム ドメインとサブドメインには、これらのうち少なくとも 1 つが設定されている必要があります。"
+        },
+        {
+            "id": "Copy",
+            "message": "Copy",
+            "translation": "コピー"
+        },
+        {
+            "id": "Select all",
+            "message": "Select all",
+            "translation": "すべて選択"
+        },
+        {
             "id": "Open Log Folder",
             "message": "Open Log Folder",
             "translation": "ログフォルダを開く"
@@ -993,6 +1178,41 @@
             "id": "Latest",
             "message": "Latest",
             "translation": "最新"
+        },
+        {
+            "id": "Item",
+            "message": "Item",
+            "translation": "項目"
+        },
+        {
+            "id": "NAT Type",
+            "message": "NAT Type",
+            "translation": "NAT タイプ"
+        },
+        {
+            "id": "Behavior",
+            "message": "Behavior",
+            "translation": "挙動"
+        },
+        {
+            "id": "External Address",
+            "message": "External Address",
+            "translation": "外部アドレス"
+        },
+        {
+            "id": "Yes",
+            "message": "Yes",
+            "translation": "はい"
+        },
+        {
+            "id": "No",
+            "message": "No",
+            "translation": "いいえ"
+        },
+        {
+            "id": "Public Network",
+            "message": "Public Network",
+            "translation": "公共のネットワーク"
         },
         {
             "id": "Unknown",
@@ -1030,11 +1250,6 @@
             "translation": "リモートアドレス"
         },
         {
-            "id": "Copy",
-            "message": "Copy",
-            "translation": "コピー"
-        },
-        {
             "id": "Start",
             "message": "Start",
             "translation": "始める"
@@ -1045,6 +1260,36 @@
             "translation": "サービス"
         },
         {
+            "id": "Stop config \"{Name}\"",
+            "message": "Stop config \"{Name}\"",
+            "translation": "設定「{Name}」を停止します",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "conf.Name"
+                }
+            ]
+        },
+        {
+            "id": "Are you sure you would like to stop config \"{Name}\"?",
+            "message": "Are you sure you would like to stop config \"{Name}\"?",
+            "translation": "設定「{Name}」を停止してもよろしいですか?",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "conf.Name"
+                }
+            ]
+        },
+        {
             "id": "Stop",
             "message": "Stop",
             "translation": "止まる"
@@ -1053,11 +1298,6 @@
             "id": "Local Directory",
             "message": "Local Directory",
             "translation": "フォルダ"
-        },
-        {
-            "id": "Add",
-            "message": "Add",
-            "translation": "追加"
         },
         {
             "id": "Port",
@@ -1175,19 +1415,19 @@
             "translation": "HTTP ファイルサーバー"
         },
         {
-            "id": "Enable",
-            "message": "Enable",
-            "translation": "有効"
+            "id": "Disable",
+            "message": "Disable",
+            "translation": "無効"
         },
         {
-            "id": "Open Config",
-            "message": "Open Config",
-            "translation": "設定を開く"
+            "id": "Move Up",
+            "message": "Move Up",
+            "translation": "上へ移動"
         },
         {
-            "id": "Direct Edit",
-            "message": "Direct Edit",
-            "translation": "直接編集"
+            "id": "Move Down",
+            "message": "Move Down",
+            "translation": "下へ移動"
         },
         {
             "id": "Domains",
@@ -1195,14 +1435,44 @@
             "translation": "ドメイン名"
         },
         {
+            "id": "Move",
+            "message": "Move",
+            "translation": "移動"
+        },
+        {
+            "id": "Up",
+            "message": "Up",
+            "translation": "下へ移動"
+        },
+        {
+            "id": "Down",
+            "message": "Down",
+            "translation": "下へ移動"
+        },
+        {
+            "id": "To Top",
+            "message": "To Top",
+            "translation": "一番上まで"
+        },
+        {
+            "id": "To Bottom",
+            "message": "To Bottom",
+            "translation": "一番下まで"
+        },
+        {
             "id": "Copy Access Address",
             "message": "Copy Access Address",
             "translation": "アクセスアドレスのコピー"
         },
         {
+            "id": "This feature only supports text in INI or TOML format.",
+            "message": "This feature only supports text in INI or TOML format.",
+            "translation": "この機能は、INI または TOML 形式のテキストのみをサポートします。"
+        },
+        {
             "id": "Delete proxy \"{Name}\"",
             "message": "Delete proxy \"{Name}\"",
-            "translation": "プロキシ \"{Name}\" を削除します",
+            "translation": "プロキシ「{Name}」を削除します",
             "placeholders": [
                 {
                     "id": "Name",
@@ -1217,7 +1487,7 @@
         {
             "id": "Are you sure you would like to delete proxy \"{Name}\"?",
             "message": "Are you sure you would like to delete proxy \"{Name}\"?",
-            "translation": "本当にプロキシ \"{Name}\" を削除しますか？",
+            "translation": "プロキシ「{Name}」を削除してもよろしいですか?",
             "placeholders": [
                 {
                     "id": "Name",
@@ -1232,7 +1502,7 @@
         {
             "id": "Disable proxy \"{Name}\"",
             "message": "Disable proxy \"{Name}\"",
-            "translation": "プロキシ \"{Name}\" を無効にする",
+            "translation": "プロキシ「{Name}」を無効にする",
             "placeholders": [
                 {
                     "id": "Name",
@@ -1247,7 +1517,7 @@
         {
             "id": "Are you sure you would like to disable proxy \"{Name}\"?",
             "message": "Are you sure you would like to disable proxy \"{Name}\"?",
-            "translation": "プロキシ \"{Name}\" を無効にしてもよろしいですか？",
+            "translation": "プロキシ「{Name}」を無効にしてもよろしいですか?",
             "placeholders": [
                 {
                     "id": "Name",
@@ -1260,9 +1530,9 @@
             ]
         },
         {
-            "id": "Disable",
-            "message": "Disable",
-            "translation": "無効"
+            "id": "Enable",
+            "message": "Enable",
+            "translation": "有効"
         },
         {
             "id": "Passive Port Range",

@@ -1,18 +1,18 @@
 package ui
 
 import (
-	"github.com/koho/frpmgr/pkg/config"
-
 	"github.com/lxn/walk"
+
+	"github.com/koho/frpmgr/pkg/config"
 )
 
 // quickAddBinder is the view model of quick-add dialog
 type quickAddBinder struct {
-	RemotePort   string
+	RemotePort   int
 	LocalAddr    string
-	LocalPort    string
-	LocalPortMin string
-	LocalPortMax string
+	LocalPort    int
+	LocalPortMin int
+	LocalPortMax int
 	Dir          string
 	Plugin       string
 }

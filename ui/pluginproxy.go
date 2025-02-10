@@ -2,14 +2,15 @@ package ui
 
 import (
 	"fmt"
+	"strconv"
+
+	"github.com/lxn/walk"
+	. "github.com/lxn/walk/declarative"
 
 	"github.com/koho/frpmgr/i18n"
 	"github.com/koho/frpmgr/pkg/config"
 	"github.com/koho/frpmgr/pkg/consts"
-	"github.com/koho/frpmgr/pkg/validators"
-
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
+	"github.com/koho/frpmgr/pkg/res"
 )
 
 type PluginProxyDialog struct {
@@ -38,14 +39,14 @@ func NewPluginProxyDialog(title string, icon *walk.Icon, plugin string) *PluginP
 func (pp *PluginProxyDialog) Run(owner walk.Form) (int, error) {
 	widgets := []Widget{
 		Label{Text: i18n.SprintfColon("Remote Port")},
-		LineEdit{Text: Bind("RemotePort", consts.ValidatePortRange...), MinSize: Size{Width: 280}},
+		NumberEdit{Value: Bind("RemotePort"), MaxValue: 65535, MinSize: Size{Width: 280}},
 	}
 	switch pp.plugin {
 	case consts.PluginHttpProxy, consts.PluginSocks5:
 		pp.binder.Plugin = consts.PluginHttpProxy
 		widgets = append([]Widget{
 			Label{Text: i18n.SprintfColon("Type")},
-			NewRadioButtonGroup("Plugin", nil, []RadioButton{
+			NewRadioButtonGroup("Plugin", nil, nil, []RadioButton{
 				{Text: "HTTP", Value: consts.PluginHttpProxy},
 				{Text: "SOCKS5", Value: consts.PluginSocks5},
 			}),
@@ -53,14 +54,13 @@ func (pp *PluginProxyDialog) Run(owner walk.Form) (int, error) {
 	case consts.PluginStaticFile:
 		widgets = append(widgets,
 			Label{Text: i18n.SprintfColon("Local Directory")},
-			NewBrowseLineEdit(nil, true, true, Bind("Dir", consts.ValidateNonEmpty),
+			NewBrowseLineEdit(nil, true, true, Bind("Dir", res.ValidateNonEmpty),
 				i18n.Sprintf("Select a folder for directory listing."), "", false),
 		)
 	}
 	return NewBasicDialog(&pp.Dialog, fmt.Sprintf("%s %s", i18n.Sprintf("Add"), pp.title), pp.icon, DataBinder{
-		AssignTo:       &pp.db,
-		DataSource:     pp.binder,
-		ErrorPresenter: validators.SilentToolTipErrorPresenter{},
+		AssignTo:   &pp.db,
+		DataSource: pp.binder,
 	}, pp.onSave, append(widgets, VSpacer{})...).Run(owner)
 }
 
@@ -77,14 +77,14 @@ func (pp *PluginProxyDialog) onSave() {
 	}
 	pp.Proxies = append(pp.Proxies, &config.Proxy{
 		BaseProxyConf: config.BaseProxyConf{
-			Name:   fmt.Sprintf("%s_%s", pp.plugin, pp.binder.RemotePort),
+			Name:   fmt.Sprintf("%s_%d", pp.plugin, pp.binder.RemotePort),
 			Type:   "tcp",
 			Plugin: pp.plugin,
 			PluginParams: config.PluginParams{
 				PluginLocalPath: pp.binder.Dir,
 			},
 		},
-		RemotePort: pp.binder.RemotePort,
+		RemotePort: strconv.Itoa(pp.binder.RemotePort),
 	})
 	pp.Accept()
 }

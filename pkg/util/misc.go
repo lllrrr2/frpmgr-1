@@ -56,7 +56,7 @@ func prune(inValue reflect.Value, ret reflect.Value, value string, tag string) e
 		for i := 0; i < inValue.NumField(); i++ {
 			f := inValue.Type().Field(i)
 			if key, ok := f.Tag.Lookup(tag); ok {
-				if key == value {
+				if key == "*" || key == value {
 					fValue = inValue.Field(i)
 					fRet = ret.Field(i)
 					fRet.Set(fValue)
@@ -65,4 +65,31 @@ func prune(inValue reflect.Value, ret reflect.Value, value string, tag string) e
 		}
 	}
 	return nil
+}
+
+func GetMapWithoutPrefix(set map[string]string, prefix string) map[string]string {
+	m := make(map[string]string)
+
+	for key, value := range set {
+		if strings.HasPrefix(key, prefix) {
+			m[strings.TrimPrefix(key, prefix)] = value
+		}
+	}
+
+	if len(m) == 0 {
+		return nil
+	}
+
+	return m
+}
+
+// MoveSlice moves the element s[i] to index j in s.
+func MoveSlice[S ~[]E, E any](s S, i, j int) {
+	x := s[i]
+	if i < j {
+		copy(s[i:j], s[i+1:j+1])
+	} else if i > j {
+		copy(s[j+1:i+1], s[j:i])
+	}
+	s[j] = x
 }

@@ -8,13 +8,13 @@ import (
 	"strings"
 	"syscall"
 
+	"golang.org/x/sys/windows"
+	"golang.org/x/sys/windows/svc"
+
 	"github.com/koho/frpmgr/i18n"
 	"github.com/koho/frpmgr/pkg/version"
 	"github.com/koho/frpmgr/services"
 	"github.com/koho/frpmgr/ui"
-
-	"golang.org/x/sys/windows"
-	"golang.org/x/sys/windows/svc"
 )
 
 func fatal(v ...interface{}) {
@@ -23,7 +23,7 @@ func fatal(v ...interface{}) {
 }
 
 func info(title string, format string, v ...interface{}) {
-	windows.MessageBox(0, windows.StringToUTF16Ptr(fmt.Sprintf(format, v...)), windows.StringToUTF16Ptr(title), windows.MB_ICONINFORMATION)
+	windows.MessageBox(0, windows.StringToUTF16Ptr(i18n.Sprintf(format, v...)), windows.StringToUTF16Ptr(title), windows.MB_ICONINFORMATION)
 }
 
 var (

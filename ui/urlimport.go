@@ -8,13 +8,13 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/koho/frpmgr/i18n"
-	"github.com/koho/frpmgr/pkg/consts"
-	"github.com/koho/frpmgr/pkg/util"
-
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
-	"github.com/thoas/go-funk"
+	"github.com/samber/lo"
+
+	"github.com/koho/frpmgr/i18n"
+	"github.com/koho/frpmgr/pkg/res"
+	"github.com/koho/frpmgr/pkg/util"
 )
 
 type URLImportDialog struct {
@@ -54,12 +54,12 @@ func NewURLImportDialog() *URLImportDialog {
 }
 
 func (ud *URLImportDialog) Run(owner walk.Form) (int, error) {
-	return NewBasicDialog(&ud.Dialog, i18n.Sprintf("Import from URL"), loadSysIcon("imageres", consts.IconURLImport, 32),
+	return NewBasicDialog(&ud.Dialog, i18n.Sprintf("Import from URL"), loadIcon(res.IconURLImport, 32),
 		DataBinder{AssignTo: &ud.db, DataSource: &ud.viewModel, Name: "vm"}, ud.onImport,
 		Label{Text: i18n.Sprintf("* Support batch import, one link per line.")},
 		TextEdit{
 			Enabled: Bind("!vm.Working"),
-			Text:    Bind("URLs", consts.ValidateNonEmpty),
+			Text:    Bind("URLs", res.ValidateNonEmpty),
 			VScroll: true,
 			MinSize: Size{Width: 430, Height: 130},
 		},
@@ -83,8 +83,9 @@ func (ud *URLImportDialog) onImport() {
 		return
 	}
 	urls := strings.Split(ud.viewModel.URLs, "\n")
-	urls = funk.FilterString(funk.Map(urls, strings.TrimSpace).([]string), func(s string) bool {
-		return s != ""
+	urls = lo.FilterMap(urls, func(s string, i int) (string, bool) {
+		s = strings.TrimSpace(s)
+		return s, s != ""
 	})
 	if len(urls) == 0 {
 		showWarningMessage(ud.Form(),

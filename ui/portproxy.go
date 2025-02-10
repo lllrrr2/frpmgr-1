@@ -2,14 +2,15 @@ package ui
 
 import (
 	"fmt"
+	"strconv"
+
+	"github.com/lxn/walk"
+	. "github.com/lxn/walk/declarative"
 
 	"github.com/koho/frpmgr/i18n"
 	"github.com/koho/frpmgr/pkg/config"
 	"github.com/koho/frpmgr/pkg/consts"
-	"github.com/koho/frpmgr/pkg/validators"
-
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
+	"github.com/koho/frpmgr/pkg/res"
 )
 
 type portProxyBinder struct {
@@ -44,7 +45,7 @@ func (pp *PortProxyDialog) Run(owner walk.Form) (int, error) {
 		Label{Text: i18n.SprintfColon("Name"), ColumnSpan: 2},
 		LineEdit{Text: Bind("Name"), CueBanner: "open_xxx", ColumnSpan: 2},
 		Label{Text: i18n.SprintfColon("Remote Port"), ColumnSpan: 2},
-		LineEdit{Text: Bind("RemotePort", consts.ValidatePortRange...), ColumnSpan: 2},
+		NumberEdit{Value: Bind("RemotePort"), MaxValue: 65535, ColumnSpan: 2},
 		Label{Text: i18n.SprintfColon("Protocol"), ColumnSpan: 2},
 		Composite{
 			Layout:     HBox{MarginsZero: true},
@@ -56,13 +57,12 @@ func (pp *PortProxyDialog) Run(owner walk.Form) (int, error) {
 		},
 		Label{Text: i18n.SprintfColon("Local Address")},
 		Label{Text: i18n.SprintfColon("Port")},
-		LineEdit{Text: Bind("LocalAddr", consts.ValidateNonEmpty), StretchFactor: 2},
-		LineEdit{Text: Bind("LocalPort", consts.ValidatePortRange...), StretchFactor: 1},
+		LineEdit{Text: Bind("LocalAddr", res.ValidateNonEmpty), StretchFactor: 2},
+		NumberEdit{Value: Bind("LocalPort", Range{Min: 1, Max: 65535}), MaxValue: 65535, MinSize: Size{Width: 90}},
 	}
-	return NewBasicDialog(&pp.Dialog, i18n.Sprintf("Open Port"), loadSysIcon("shell32", consts.IconOpenPort, 32), DataBinder{
-		AssignTo:       &pp.db,
-		DataSource:     pp.binder,
-		ErrorPresenter: validators.SilentToolTipErrorPresenter{},
+	return NewBasicDialog(&pp.Dialog, i18n.Sprintf("Open Port"), loadIcon(res.IconOpenPort, 32), DataBinder{
+		AssignTo:   &pp.db,
+		DataSource: pp.binder,
 	}, pp.onSave, Composite{
 		Layout:   Grid{Columns: 2, MarginsZero: true},
 		MinSize:  Size{Width: 280},
@@ -80,15 +80,15 @@ func (pp *PortProxyDialog) onSave() {
 	}
 	name := pp.binder.Name
 	if name == "" {
-		name = fmt.Sprintf("open_%s", pp.binder.RemotePort)
+		name = fmt.Sprintf("open_%d", pp.binder.RemotePort)
 	}
 	proxy := config.Proxy{
 		BaseProxyConf: config.BaseProxyConf{
 			Name:      name,
 			LocalIP:   pp.binder.LocalAddr,
-			LocalPort: pp.binder.LocalPort,
+			LocalPort: strconv.Itoa(pp.binder.LocalPort),
 		},
-		RemotePort: pp.binder.RemotePort,
+		RemotePort: strconv.Itoa(pp.binder.RemotePort),
 	}
 	if pp.binder.TCP {
 		tcpProxy := proxy

@@ -3,16 +3,18 @@ package ui
 import (
 	"fmt"
 	"net"
-	"path/filepath"
+	"strconv"
 	"strings"
+
+	frpconfig "github.com/fatedier/frp/pkg/config"
+	"github.com/lxn/walk"
+	. "github.com/lxn/walk/declarative"
 
 	"github.com/koho/frpmgr/i18n"
 	"github.com/koho/frpmgr/pkg/config"
 	"github.com/koho/frpmgr/pkg/consts"
+	"github.com/koho/frpmgr/pkg/res"
 	"github.com/koho/frpmgr/pkg/util"
-
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
 )
 
 type ProxyView struct {
@@ -36,8 +38,6 @@ type ProxyView struct {
 	vpnAction       *walk.Action
 	editAction      *walk.Action
 	deleteAction    *walk.Action
-	openConfAction  *walk.Action
-	showConfAction  *walk.Action
 	toggleAction    *walk.Action
 }
 
@@ -91,6 +91,7 @@ func (pv *ProxyView) Invalidate() {
 }
 
 func (pv *ProxyView) createToolbar() ToolBar {
+	mc := movingConditions()
 	return ToolBar{
 		AssignTo:    &pv.toolbar,
 		ButtonStyle: ToolBarButtonImageBeforeText,
@@ -99,19 +100,19 @@ func (pv *ProxyView) createToolbar() ToolBar {
 			Action{
 				AssignTo: &pv.newAction,
 				Text:     i18n.Sprintf("Add"),
-				Image:    loadSysIcon("shell32", consts.IconCreate, 16),
+				Image:    loadIcon(res.IconCreate, 16),
 				OnTriggered: func() {
 					pv.onEdit(false, nil)
 				},
 			},
 			Menu{
 				Text:  i18n.Sprintf("Quick Add"),
-				Image: loadSysIcon("imageres", consts.IconQuickAdd, 16),
+				Image: loadIcon(res.IconQuickAdd, 16),
 				Items: []MenuItem{
 					Action{
 						AssignTo: &pv.portAction,
 						Text:     i18n.Sprintf("Open Port"),
-						Image:    loadSysIcon("shell32", consts.IconOpenPort, 16),
+						Image:    loadIcon(res.IconOpenPort, 16),
 						OnTriggered: func() {
 							pv.onQuickAdd(NewPortProxyDialog())
 						},
@@ -119,85 +120,85 @@ func (pv *ProxyView) createToolbar() ToolBar {
 					Action{
 						AssignTo: &pv.rdAction,
 						Text:     i18n.Sprintf("Remote Desktop"),
-						Image:    loadSysIcon("imageres", consts.IconRemote, 16),
+						Image:    loadIcon(res.IconRemote, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewSimpleProxyDialog(i18n.Sprintf("Remote Desktop"), loadSysIcon("imageres", consts.IconRemote, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog(i18n.Sprintf("Remote Desktop"), loadIcon(res.IconRemote, 32),
 								"rdp", []string{consts.ProxyTypeTCP, consts.ProxyTypeUDP}, ":3389"))
 						},
 					},
 					Action{
 						AssignTo: &pv.vncAction,
 						Text:     "VNC",
-						Image:    loadSysIcon("imageres", consts.IconVNC, 16),
+						Image:    loadIcon(res.IconVNC, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewSimpleProxyDialog("VNC", loadSysIcon("imageres", consts.IconVNC, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog("VNC", loadIcon(res.IconVNC, 32),
 								"vnc", []string{consts.ProxyTypeTCP, consts.ProxyTypeUDP}, ":5900"))
 						},
 					},
 					Action{
 						AssignTo: &pv.sshAction,
 						Text:     "SSH",
-						Image:    loadResourceIcon(consts.IconSSH, 16),
+						Image:    loadIcon(res.IconSSH, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewSimpleProxyDialog("SSH", loadResourceIcon(consts.IconSSH, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog("SSH", loadIcon(res.IconSSH, 32),
 								"ssh", []string{consts.ProxyTypeTCP}, ":22"))
 						},
 					},
 					Action{
 						AssignTo: &pv.webAction,
 						Text:     "Web",
-						Image:    loadSysIcon("shell32", consts.IconWeb, 16),
+						Image:    loadIcon(res.IconWeb, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewSimpleProxyDialog("Web", loadSysIcon("shell32", consts.IconWeb, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog("Web", loadIcon(res.IconWeb, 32),
 								"web", []string{consts.ProxyTypeTCP}, ":80"))
 						},
 					},
 					Action{
 						AssignTo: &pv.dnsAction,
 						Text:     "DNS",
-						Image:    loadSysIcon("imageres", consts.IconDns, 16),
+						Image:    loadIcon(res.IconDns, 16),
 						OnTriggered: func() {
 							systemDns := util.GetSystemDnsServer()
 							if systemDns == "" {
 								systemDns = "114.114.114.114"
 							}
-							pv.onQuickAdd(NewSimpleProxyDialog("DNS", loadSysIcon("imageres", consts.IconDns, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog("DNS", loadIcon(res.IconDns, 32),
 								"dns", []string{consts.ProxyTypeUDP}, systemDns+":53"))
 						},
 					},
 					Action{
 						AssignTo: &pv.vpnAction,
 						Text:     "OpenVPN",
-						Image:    loadSysIcon("shell32", consts.IconVpn, 16),
+						Image:    loadIcon(res.IconLock, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewSimpleProxyDialog("OpenVPN", loadSysIcon("shell32", consts.IconVpn, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog("OpenVPN", loadIcon(res.IconLock, 32),
 								"openvpn", []string{consts.ProxyTypeTCP, consts.ProxyTypeUDP}, ":1194"))
 						},
 					},
 					Action{
 						AssignTo: &pv.ftpAction,
 						Text:     "FTP",
-						Image:    loadSysIcon("imageres", consts.IconFtp, 16),
+						Image:    loadIcon(res.IconFtp, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewSimpleProxyDialog("FTP", loadSysIcon("imageres", consts.IconFtp, 32),
+							pv.onQuickAdd(NewSimpleProxyDialog("FTP", loadIcon(res.IconFtp, 32),
 								"ftp", []string{consts.ProxyTypeTCP}, ":21"))
 						},
 					},
 					Action{
 						AssignTo: &pv.httpFileAction,
 						Text:     i18n.Sprintf("HTTP File Server"),
-						Image:    loadSysIcon("imageres", consts.IconHttpFile, 16),
+						Image:    loadIcon(res.IconHttpFile, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewPluginProxyDialog(i18n.Sprintf("HTTP File Server"), loadSysIcon("imageres", consts.IconHttpFile, 32),
+							pv.onQuickAdd(NewPluginProxyDialog(i18n.Sprintf("HTTP File Server"), loadIcon(res.IconHttpFile, 32),
 								consts.PluginStaticFile))
 						},
 					},
 					Action{
 						AssignTo: &pv.httpProxyAction,
 						Text:     i18n.Sprintf("HTTP Proxy"),
-						Image:    loadSysIcon("imageres", consts.IconHttpProxy, 16),
+						Image:    loadIcon(res.IconHttpProxy, 16),
 						OnTriggered: func() {
-							pv.onQuickAdd(NewPluginProxyDialog(i18n.Sprintf("HTTP Proxy"), loadSysIcon("imageres", consts.IconHttpProxy, 32),
+							pv.onQuickAdd(NewPluginProxyDialog(i18n.Sprintf("HTTP Proxy"), loadIcon(res.IconHttpProxy, 32),
 								consts.PluginHttpProxy))
 						},
 					},
@@ -205,7 +206,7 @@ func (pv *ProxyView) createToolbar() ToolBar {
 			},
 			Action{
 				AssignTo: &pv.editAction,
-				Image:    loadSysIcon("shell32", consts.IconEdit, 16),
+				Image:    loadIcon(res.IconEdit, 16),
 				Text:     i18n.Sprintf("Edit"),
 				Enabled:  Bind("proxy.CurrentIndex >= 0"),
 				OnTriggered: func() {
@@ -214,43 +215,40 @@ func (pv *ProxyView) createToolbar() ToolBar {
 			},
 			Action{
 				AssignTo:    &pv.toggleAction,
-				Image:       loadResourceIcon(consts.IconEnable, 16),
-				Text:        i18n.Sprintf("Enable"),
+				Image:       loadIcon(res.IconDisable, 16),
+				Text:        i18n.Sprintf("Disable"),
 				Enabled:     Bind("proxy.CurrentIndex >= 0 && switchable(proxy.CurrentIndex)"),
 				OnTriggered: pv.onToggleProxy,
 			},
 			Action{
+				Image:   loadIcon(res.IconArrowUp, 16),
+				Text:    i18n.Sprintf("Move Up"),
+				Enabled: mc[0],
+				OnTriggered: func() {
+					pv.onMove(-1)
+				},
+			},
+			Action{
+				Image:   flipIcon(res.IconArrowUp, 16),
+				Text:    i18n.Sprintf("Move Down"),
+				Enabled: mc[1],
+				OnTriggered: func() {
+					pv.onMove(1)
+				},
+			},
+			Action{
 				AssignTo:    &pv.deleteAction,
-				Image:       loadSysIcon("shell32", consts.IconDelete, 16),
+				Image:       loadIcon(res.IconDelete, 16),
 				Text:        i18n.Sprintf("Delete"),
 				Enabled:     Bind("proxy.CurrentIndex >= 0"),
 				OnTriggered: pv.onDelete,
-			},
-			Menu{
-				Text:  i18n.Sprintf("Open Config"),
-				Image: loadResourceIcon(consts.IconOpen, 16),
-				Items: []MenuItem{
-					Action{
-						AssignTo: &pv.openConfAction,
-						Text:     i18n.Sprintf("Direct Edit"),
-						OnTriggered: func() {
-							pv.onOpenConfig(false)
-						},
-					},
-					Action{
-						AssignTo: &pv.showConfAction,
-						Text:     i18n.Sprintf("Show in Folder"),
-						OnTriggered: func() {
-							pv.onOpenConfig(true)
-						},
-					},
-				},
 			},
 		},
 	}
 }
 
 func (pv *ProxyView) createProxyTable() TableView {
+	mc := movingConditions()
 	return TableView{
 		Name:     "proxy",
 		AssignTo: &pv.table,
@@ -266,11 +264,49 @@ func (pv *ProxyView) createProxyTable() TableView {
 		ContextMenuItems: []MenuItem{
 			ActionRef{Action: &pv.editAction},
 			ActionRef{Action: &pv.toggleAction},
+			Menu{
+				Text:    i18n.Sprintf("Move"),
+				Image:   loadIcon(res.IconMove, 16),
+				Enabled: Bind("proxy.CurrentIndex >= 0 && proxy.ItemCount > 1"),
+				Items: []MenuItem{
+					Action{
+						Text:    i18n.Sprintf("Up"),
+						Enabled: mc[0],
+						OnTriggered: func() {
+							pv.onMove(-1)
+						},
+					},
+					Action{
+						Text:    i18n.Sprintf("Down"),
+						Enabled: mc[1],
+						OnTriggered: func() {
+							pv.onMove(1)
+						},
+					},
+					Action{
+						Text:    i18n.Sprintf("To Top"),
+						Enabled: mc[0],
+						OnTriggered: func() {
+							pv.onMove(-pv.table.CurrentIndex())
+						},
+					},
+					Action{
+						Text:    i18n.Sprintf("To Bottom"),
+						Enabled: mc[1],
+						OnTriggered: func() {
+							if pv.model == nil {
+								return
+							}
+							pv.onMove(len(pv.model.items) - pv.table.CurrentIndex() - 1)
+						},
+					},
+				},
+			},
 			Separator{},
 			ActionRef{Action: &pv.newAction},
 			Menu{
 				Text:  i18n.Sprintf("Quick Add"),
-				Image: loadSysIcon("imageres", consts.IconQuickAdd, 16),
+				Image: loadIcon(res.IconQuickAdd, 16),
 				Items: []MenuItem{
 					ActionRef{Action: &pv.portAction},
 					ActionRef{Action: &pv.rdAction},
@@ -286,23 +322,15 @@ func (pv *ProxyView) createProxyTable() TableView {
 			},
 			Action{
 				Text:        i18n.Sprintf("Import from Clipboard"),
-				Image:       loadSysIcon("shell32", consts.IconClipboard, 16),
+				Image:       loadIcon(res.IconClipboard, 16),
 				OnTriggered: pv.onClipboardImport,
 			},
 			Separator{},
 			Action{
 				Enabled:     Bind("proxy.CurrentIndex >= 0"),
 				Text:        i18n.Sprintf("Copy Access Address"),
-				Image:       loadSysIcon("shell32", consts.IconSysCopy, 16),
+				Image:       loadIcon(res.IconSysCopy, 16),
 				OnTriggered: pv.onCopyAccessAddr,
-			},
-			Menu{
-				Text:  i18n.Sprintf("Open Config"),
-				Image: loadResourceIcon(consts.IconOpen, 16),
-				Items: []MenuItem{
-					ActionRef{Action: &pv.openConfAction},
-					ActionRef{Action: &pv.showConfAction},
-				},
 			},
 			Separator{},
 			ActionRef{Action: &pv.deleteAction},
@@ -314,11 +342,11 @@ func (pv *ProxyView) createProxyTable() TableView {
 			if _, proxy := pv.getConfigProxy(style.Row()); proxy != nil {
 				if proxy.Disabled {
 					// Disabled proxy
-					style.TextColor = consts.ColorGray
-					style.BackgroundColor = consts.ColorGrayBG
+					style.TextColor = res.ColorGray
+					style.BackgroundColor = res.ColorGrayBG
 				} else if proxy.IsVisitor() {
 					// Visitor proxy
-					style.TextColor = consts.ColorBlue
+					style.TextColor = res.ColorBlue
 				}
 				// Normal proxy is default black text
 			}
@@ -350,7 +378,9 @@ func (pv *ProxyView) onCopyAccessAddr() {
 		}
 	case consts.ProxyTypeXTCP, consts.ProxyTypeSTCP, consts.ProxyTypeSUDP:
 		if proxy.Role == "visitor" {
-			access = util.GetOrElse(proxy.BindAddr, "127.0.0.1") + ":" + proxy.BindPort
+			if proxy.BindPort > 0 {
+				access = util.GetOrElse(proxy.BindAddr, "127.0.0.1") + ":" + strconv.Itoa(proxy.BindPort)
+			}
 		} else {
 			access = util.GetOrElse(proxy.LocalIP, "127.0.0.1") + ":" + proxy.LocalPort
 		}
@@ -372,9 +402,32 @@ func (pv *ProxyView) onClipboardImport() {
 	if err != nil || strings.TrimSpace(text) == "" {
 		return
 	}
-	proxy, err := config.UnmarshalProxyFromIni([]byte(text))
+	var proxy *config.Proxy
+	if strings.HasPrefix(text, "[[proxies]]") {
+		var proxies struct {
+			C []config.TypedProxyConfig `json:"proxies"`
+		}
+		if err = frpconfig.LoadConfigure([]byte(text), &proxies, false); err == nil && len(proxies.C) > 0 {
+			proxy = config.ClientProxyFromV1(proxies.C[0])
+		}
+	} else if strings.HasPrefix(text, "[[visitors]]") {
+		var visitors struct {
+			C []config.TypedVisitorConfig `json:"visitors"`
+		}
+		if err = frpconfig.LoadConfigure([]byte(text), &visitors, false); err == nil && len(visitors.C) > 0 {
+			proxy = config.ClientVisitorFromV1(visitors.C[0])
+		}
+	} else if strings.HasPrefix(text, "[") {
+		proxy, err = config.UnmarshalProxyFromIni([]byte(text))
+	} else {
+		showErrorMessage(pv.Form(), "", i18n.Sprintf("This feature only supports text in INI or TOML format."))
+		return
+	}
 	if err != nil {
 		showError(err, pv.Form())
+		return
+	}
+	if proxy == nil {
 		return
 	}
 	pv.onEdit(false, proxy)
@@ -389,7 +442,7 @@ func (pv *ProxyView) onDelete() {
 	oldConf := pv.model.conf.Name
 	if walk.MsgBox(pv.Form(), i18n.Sprintf("Delete proxy \"%s\"", proxy.Name),
 		i18n.Sprintf("Are you sure you would like to delete proxy \"%s\"?", proxy.Name),
-		walk.MsgBoxOKCancel|walk.MsgBoxIconWarning) == walk.DlgCmdCancel {
+		walk.MsgBoxYesNo|walk.MsgBoxIconWarning) == walk.DlgCmdNo {
 		return
 	}
 	if !hasConf(oldConf) {
@@ -410,7 +463,7 @@ func (pv *ProxyView) onEdit(current bool, fill *config.Proxy) {
 		if conf == nil {
 			return
 		}
-		ep := NewEditProxyDialog(pv.model.conf.Name, proxy, true)
+		ep := NewEditProxyDialog(pv.model.conf.Name, proxy, pv.visitors(proxy), true, pv.model.data.LegacyFormat)
 		if ret, _ := ep.Run(pv.Form()); ret == walk.DlgCmdOK {
 			if conf.CountStart() == 0 {
 				ep.Proxy.Disabled = false
@@ -419,7 +472,7 @@ func (pv *ProxyView) onEdit(current bool, fill *config.Proxy) {
 			pv.table.SetCurrentIndex(idx)
 		}
 	} else {
-		ep := NewEditProxyDialog(pv.model.conf.Name, fill, false)
+		ep := NewEditProxyDialog(pv.model.conf.Name, fill, pv.visitors(nil), false, pv.model.data.LegacyFormat)
 		if ret, _ := ep.Run(pv.Form()); ret == walk.DlgCmdOK {
 			if pv.model.data.AddItem(ep.Proxy) {
 				if pv.model.data.CountStart() == 0 {
@@ -443,10 +496,12 @@ func (pv *ProxyView) onToggleProxy() {
 			return
 		}
 		oldConf := pv.model.conf.Name
-		if walk.MsgBox(pv.Form(), i18n.Sprintf("Disable proxy \"%s\"", proxy.Name),
-			i18n.Sprintf("Are you sure you would like to disable proxy \"%s\"?", proxy.Name),
-			walk.MsgBoxOKCancel|walk.MsgBoxIconWarning) == walk.DlgCmdCancel {
-			return
+		if cc := getCurrentConf(); cc != nil && cc.State == consts.StateStarted {
+			if walk.MsgBox(pv.Form(), i18n.Sprintf("Disable proxy \"%s\"", proxy.Name),
+				i18n.Sprintf("Are you sure you would like to disable proxy \"%s\"?", proxy.Name),
+				walk.MsgBoxYesNo|walk.MsgBoxIconQuestion) == walk.DlgCmdNo {
+				return
+			}
 		}
 		if !hasConf(oldConf) {
 			warnConfigRemoved(pv.Form(), oldConf)
@@ -463,7 +518,7 @@ func (pv *ProxyView) onQuickAdd(qa QuickAdd) {
 	}
 	added := false
 	oldConf := pv.model.conf.Name
-	if res, _ := qa.Run(pv.Form()); res == walk.DlgCmdOK {
+	if r, _ := qa.Run(pv.Form()); r == walk.DlgCmdOK {
 		if pv.model == nil || pv.model.conf.Name != oldConf {
 			warnConfigRemoved(pv.Form(), oldConf)
 			return
@@ -482,17 +537,20 @@ func (pv *ProxyView) onQuickAdd(qa QuickAdd) {
 	}
 }
 
-func (pv *ProxyView) onOpenConfig(folder bool) {
-	if pv.model == nil {
+func (pv *ProxyView) onMove(delta int) {
+	curIdx := pv.table.CurrentIndex()
+	conf, _ := pv.getConfigProxy(curIdx)
+	if conf == nil {
 		return
 	}
-	if path, err := filepath.Abs(pv.model.conf.Path); err == nil {
-		if folder {
-			openFolder(path)
-		} else {
-			openPath(path)
-		}
+	targetIdx := curIdx + delta
+	conf, _ = pv.getConfigProxy(targetIdx)
+	if conf == nil {
+		return
 	}
+	pv.model.Move(curIdx, targetIdx)
+	commitConf(pv.model.conf, runFlagReload)
+	pv.table.SetCurrentIndex(targetIdx)
 }
 
 // switchToggleAction updates the toggle action based on the current selected proxy
@@ -503,10 +561,10 @@ func (pv *ProxyView) switchToggleAction() {
 	}
 	if proxy.Disabled {
 		pv.toggleAction.SetText(i18n.Sprintf("Enable"))
-		pv.toggleAction.SetImage(loadResourceIcon(consts.IconEnable, 16))
+		pv.toggleAction.SetImage(loadIcon(res.IconEnable, 16))
 	} else {
 		pv.toggleAction.SetText(i18n.Sprintf("Disable"))
-		pv.toggleAction.SetImage(loadResourceIcon(consts.IconDisable, 16))
+		pv.toggleAction.SetImage(loadIcon(res.IconDisable, 16))
 	}
 }
 
@@ -514,12 +572,30 @@ func (pv *ProxyView) switchToggleAction() {
 func (pv *ProxyView) commit() {
 	pv.Invalidate()
 	if pv.model != nil {
-		commitConf(pv.model.conf, false)
+		commitConf(pv.model.conf, runFlagReload)
 	}
 }
 
 func (pv *ProxyView) scrollToBottom() {
 	if tm := pv.table.TableModel(); tm != nil && tm.RowCount() > 0 {
 		pv.table.EnsureItemVisible(tm.RowCount() - 1)
+	}
+}
+
+// visitors returns a list of visitor names except the given proxy.
+func (pv *ProxyView) visitors(except *config.Proxy) (visitors []string) {
+	for _, proxy := range pv.model.data.Proxies {
+		if proxy != except && proxy.IsVisitor() {
+			visitors = append(visitors, proxy.Name)
+		}
+	}
+	return
+}
+
+// Conditions for moving up/down proxy.
+func movingConditions() [2]Property {
+	return [2]Property{
+		Bind("proxy.CurrentIndex > 0"),
+		Bind("proxy.CurrentIndex >= 0 && proxy.CurrentIndex < proxy.ItemCount - 1"),
 	}
 }

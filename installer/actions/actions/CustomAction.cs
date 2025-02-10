@@ -1,10 +1,8 @@
 using Microsoft.Deployment.WindowsInstaller;
 using System;
-using System.Collections.Generic;
 using System.Configuration.Install;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
@@ -90,6 +88,45 @@ namespace actions
             }
         }
 
+        public static void RemoveServices(Session session, string prefix, string binPath)
+        {
+            ServiceController[] services = ServiceController.GetServices();
+            foreach (ServiceController controller in services)
+            {
+                ManagementObject wmiService = new ManagementObject("Win32_Service.Name='" + controller.ServiceName + "'");
+                wmiService.Get();
+                string pathName = wmiService.GetPropertyValue("PathName").ToString();
+                string path1 = pathName.Substring(0, Math.Min(binPath.Length, pathName.Length));
+                string path2 = pathName.Substring(1, Math.Min(binPath.Length, pathName.Length - 1));
+                if ((binPath.ToLower().Equals(path1.ToLower()) || binPath.ToLower().Equals(path2.ToLower())) && controller.ServiceName.StartsWith(prefix))
+                {
+                    try
+                    {
+                        controller.Stop();
+                        controller.WaitForStatus(ServiceControllerStatus.Stopped);
+                    }
+                    catch (Exception)
+                    {
+                        session.Log("Failed to stop " + controller.ServiceName);
+                    }
+
+                    ServiceInstaller installer = new ServiceInstaller
+                    {
+                        Context = new InstallContext(),
+                        ServiceName = controller.ServiceName
+                    };
+                    try
+                    {
+                        installer.Uninstall(null);
+                    }
+                    catch (Exception)
+                    {
+                        session.Log("Failed to uninstall " + controller.ServiceName);
+                    }
+                }
+            }
+        }
+
         [CustomAction]
         public static ActionResult KillProcesses(Session session)
         {
@@ -129,6 +166,14 @@ namespace actions
             {
                 ForceDeleteDirectory(Path.Combine(installPath, "profiles"));
                 ForceDeleteDirectory(Path.Combine(installPath, "logs"));
+                try
+                {
+                    File.Delete(Path.Combine(installPath, "app.json"));
+                }
+                catch (Exception e)
+                {
+                    session.Log(e.Message);
+                }
             }
             return ActionResult.Success;
         }
@@ -142,41 +187,7 @@ namespace actions
             {
                 return ActionResult.Success;
             }
-            ServiceController[] services = ServiceController.GetServices();
-            foreach (ServiceController controller in services)
-            {
-                ManagementObject wmiService = new ManagementObject("Win32_Service.Name='" + controller.ServiceName + "'");
-                wmiService.Get();
-                string pathName = wmiService.GetPropertyValue("PathName").ToString();
-                string path1 = pathName.Substring(0, Math.Min(binPath.Length, pathName.Length));
-                string path2 = pathName.Substring(1, Math.Min(binPath.Length, pathName.Length - 1));
-                if (binPath.ToLower().Equals(path1.ToLower()) || binPath.ToLower().Equals(path2.ToLower()))
-                {
-                    try
-                    {
-                        controller.Stop();
-                        controller.WaitForStatus(ServiceControllerStatus.Stopped);
-                    }
-                    catch (Exception)
-                    {
-                        session.Log("Failed to stop " + controller.ServiceName);
-                    }
-
-                    ServiceInstaller installer = new ServiceInstaller
-                    {
-                        Context = new InstallContext(),
-                        ServiceName = controller.ServiceName
-                    };
-                    try
-                    {
-                        installer.Uninstall(null);
-                    }
-                    catch (Exception)
-                    {
-                        session.Log("Failed to uninstall " + controller.ServiceName);
-                    }
-                }
-            }
+            RemoveServices(session, "", binPath);
             return ActionResult.Success;
         }
 
@@ -207,8 +218,8 @@ namespace actions
         public static ActionResult SetLangConfig(Session session)
         {
             session.Log("Set language config");
-            string langPath = session["CustomActionData"];
-            if (string.IsNullOrEmpty(langPath))
+            string installPath = session["CustomActionData"];
+            if (string.IsNullOrEmpty(installPath))
             {
                 return ActionResult.Failure;
             }
@@ -217,7 +228,18 @@ namespace actions
             {
                 return ActionResult.Failure;
             }
-            File.AppendAllText(langPath, name.ToString() + Environment.NewLine, Encoding.UTF8);
+            string cfgPath = Path.Combine(installPath, "app.json");
+            if (!File.Exists(cfgPath))
+            {
+                try
+                {
+                    File.WriteAllText(cfgPath, "{\n    \"lang\": \"" + name.ToString() + "\"\n}");
+                }
+                catch (Exception e)
+                {
+                    session.Log(e.Message);
+                }
+            }
             return ActionResult.Success;
         }
 
@@ -243,6 +265,30 @@ namespace actions
                     session.Log(e.Message);
                 }
             }
+            foreach (string profile in Directory.GetFiles(profilePath, "*.ini"))
+            {
+                try
+                {
+                    File.Move(profile, Path.Combine(profilePath, Path.GetFileNameWithoutExtension(profile) + ".conf"));
+                }
+                catch (Exception e)
+                {
+                    session.Log(e.Message);
+                }
+            }
+            return ActionResult.Success;
+        }
+
+        [CustomAction]
+        public static ActionResult RemoveOldFrpServices(Session session)
+        {
+            session.Log("Remove old FRP Services");
+            string binPath = session["CustomActionData"];
+            if (string.IsNullOrEmpty(binPath))
+            {
+                return ActionResult.Success;
+            }
+            RemoveServices(session, "FRPC$", binPath);
             return ActionResult.Success;
         }
     }

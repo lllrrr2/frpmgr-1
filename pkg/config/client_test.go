@@ -12,9 +12,9 @@ func TestUnmarshalClientConfFromIni(t *testing.T) {
 		server_addr = example.com
 		server_port = 7001
 		token = 123456
-		manual_start = true
-		delete_method = absolute
-		delete_after_date = 2023-03-23T00:00:00Z
+		frpmgr_manual_start = true
+		frpmgr_delete_method = absolute
+		frpmgr_delete_after_date = 2023-03-23T00:00:00Z
 		meta_1 = value
 		
 		[ssh]
@@ -25,11 +25,12 @@ func TestUnmarshalClientConfFromIni(t *testing.T) {
 		meta_2 = value
 	`
 	expected := NewDefaultClientConfig()
+	expected.LegacyFormat = true
 	expected.ServerAddress = "example.com"
-	expected.ServerPort = "7001"
+	expected.ServerPort = 7001
 	expected.Token = "123456"
 	expected.ManualStart = true
-	expected.Custom = map[string]string{"meta_1": "value"}
+	expected.Metas = map[string]string{"1": "value"}
 	expected.DeleteMethod = "absolute"
 	expected.DeleteAfterDate = time.Date(2023, 3, 23, 0, 0, 0, 0, time.UTC)
 	expected.Proxies = append(expected.Proxies, &Proxy{
@@ -38,7 +39,7 @@ func TestUnmarshalClientConfFromIni(t *testing.T) {
 			Type:      "tcp",
 			LocalIP:   "192.168.1.1",
 			LocalPort: "22",
-			Custom:    map[string]string{"meta_2": "value"},
+			Metas:     map[string]string{"2": "value"},
 		},
 		RemotePort: "6000",
 	})

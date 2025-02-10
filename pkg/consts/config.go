@@ -1,8 +1,10 @@
 package consts
 
-import "github.com/fatedier/frp/pkg/config"
-
-const RangePrefix = "range:"
+const (
+	RangePrefix       = "range:"
+	DefaultSTUNServer = "stun.easyvoip.com:3478"
+	DefaultServerPort = 7000
+)
 
 // Protocols
 const (
@@ -10,9 +12,10 @@ const (
 	ProtoKCP       = "kcp"
 	ProtoQUIC      = "quic"
 	ProtoWebsocket = "websocket"
+	ProtoWSS       = "wss"
 )
 
-var Protocols = []string{ProtoTCP, ProtoKCP, ProtoQUIC, ProtoWebsocket}
+var Protocols = []string{ProtoTCP, ProtoKCP, ProtoQUIC, ProtoWebsocket, ProtoWSS}
 
 // Proxy types
 const (
@@ -39,13 +42,14 @@ const (
 	PluginHttps2Http  = "https2http"
 	PluginHttps2Https = "https2https"
 	PluginHttp2Https  = "http2https"
+	PluginHttp2Http   = "http2http"
 	PluginUnixDomain  = "unix_domain_socket"
+	PluginTLS2Raw     = "tls2raw"
 )
 
 var PluginTypes = []string{
-	PluginHttpProxy, PluginSocks5, PluginStaticFile,
-	PluginHttps2Http, PluginHttps2Https, PluginHttp2Https,
-	PluginUnixDomain,
+	PluginHttp2Http, PluginHttp2Https, PluginHttps2Http, PluginHttps2Https,
+	PluginHttpProxy, PluginSocks5, PluginStaticFile, PluginUnixDomain, PluginTLS2Raw,
 }
 
 // Auth methods
@@ -68,10 +72,7 @@ const (
 // Bandwidth
 var (
 	Bandwidth     = []string{"MB", "KB"}
-	BandwidthMode = []string{
-		config.BandwidthLimitModeClient,
-		config.BandwidthLimitModeServer,
-	}
+	BandwidthMode = []string{"client", "server"}
 )
 
 // Log level
@@ -84,3 +85,5 @@ const (
 )
 
 var LogLevels = []string{LogLevelTrace, LogLevelDebug, LogLevelInfo, LogLevelWarn, LogLevelError}
+
+const DefaultLogMaxDays = 3

@@ -5,16 +5,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/koho/frpmgr/i18n"
-	"github.com/koho/frpmgr/pkg/consts"
-	"github.com/koho/frpmgr/pkg/util"
-	"github.com/koho/frpmgr/services"
-
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 	"github.com/lxn/win"
-	"github.com/thoas/go-funk"
+	"github.com/samber/lo"
 	"golang.org/x/sys/windows"
+
+	"github.com/koho/frpmgr/i18n"
+	"github.com/koho/frpmgr/pkg/res"
+	"github.com/koho/frpmgr/pkg/util"
+	"github.com/koho/frpmgr/services"
 )
 
 const AppName = "FRP Manager"
@@ -53,11 +53,12 @@ type FRPManager struct {
 }
 
 func RunUI() error {
+	var err error
 	// Make sure the config directory exists.
-	if err := os.MkdirAll(PathOfConf(""), os.ModePerm); err != nil {
+	if err = os.MkdirAll(PathOfConf(""), os.ModePerm); err != nil {
 		return err
 	}
-	if err := loadAllConfs(); err != nil {
+	if err = loadAllConfs(); err != nil {
 		return err
 	}
 	if appConf.Password != "" {
@@ -67,7 +68,10 @@ func RunUI() error {
 	}
 	fm := new(FRPManager)
 	fm.confPage = NewConfPage()
-	fm.logPage = NewLogPage()
+	fm.logPage, err = NewLogPage()
+	if err != nil {
+		return err
+	}
 	fm.prefPage = NewPrefPage()
 	fm.aboutPage = NewAboutPage()
 	mw := MainWindow{
@@ -77,7 +81,7 @@ func RunUI() error {
 		Persistent: true,
 		Visible:    false,
 		Layout:     VBox{Margins: Margins{Left: 5, Top: 5, Right: 5, Bottom: 5}},
-		Font:       consts.TextRegular,
+		Font:       res.TextRegular,
 		Children: []Widget{
 			TabWidget{
 				AssignTo: &fm.tabs,
@@ -89,19 +93,9 @@ func RunUI() error {
 				},
 			},
 		},
-		Functions: map[string]func(args ...interface{}) (interface{}, error){
-			"sysIcon": func(args ...interface{}) (interface{}, error) {
-				for _, index := range args[2:] {
-					if icon := loadSysIcon(args[0].(string), int32(index.(float64)), int(args[1].(float64))); icon != nil {
-						return icon, nil
-					}
-				}
-				return nil, nil
-			},
-		},
 		OnDropFiles: fm.confPage.confView.ImportFiles,
 	}
-	if err := mw.Create(); err != nil {
+	if err = mw.Create(); err != nil {
 		return err
 	}
 	// Initialize child pages
@@ -116,6 +110,7 @@ func RunUI() error {
 	})
 	fm.SetVisible(true)
 	fm.Run()
+	fm.logPage.Close()
 	services.Cleanup()
 	return nil
 }
@@ -168,7 +163,7 @@ func openFolder(path string) {
 // openFileDialog shows a file dialog to choose file or directory and sends the selected path to the LineEdit view
 func openFileDialog(receiver *walk.LineEdit, title string, filter string, file bool) error {
 	dlg := walk.FileDialog{
-		Filter: filter + consts.FilterAllFiles,
+		Filter: filter + res.FilterAllFiles,
 		Title:  title,
 	}
 	var ok bool
@@ -202,11 +197,11 @@ func calculateHeadColumnTextWidth(widgets []Widget, columns int) int {
 
 // calculateStringWidth returns the estimated display width of the given string
 func calculateStringWidth(str string) int {
-	return int(funk.Sum(funk.Map(util.RuneSizeInString(str), func(s int) int {
+	return lo.Sum(lo.Map(util.RuneSizeInString(str), func(s int, i int) int {
 		// For better estimation, reduce size for non-ascii character
 		if s > 1 {
 			return s - 1
 		}
 		return s
-	})) * 6)
+	})) * 6
 }

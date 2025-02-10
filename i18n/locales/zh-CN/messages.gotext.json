@@ -139,12 +139,12 @@
         {
             "id": "For comments or to report bugs, please visit the project page:",
             "message": "For comments or to report bugs, please visit the project page:",
-            "translation": "如有任何意见或报告错误，请访问项目地址："
+            "translation": "如有任何意见或报告错误，请访问项目网址："
         },
         {
             "id": "For FRP configuration documentation, please visit the FRP project page:",
             "message": "For FRP configuration documentation, please visit the FRP project page:",
-            "translation": "了解 FRP 软件配置文档，请访问 FRP 项目地址："
+            "translation": "了解 FRP 软件配置文档，请访问 FRP 项目网址："
         },
         {
             "id": "An error occurred while checking for a software update.",
@@ -165,6 +165,31 @@
             "id": "Cancel",
             "message": "Cancel",
             "translation": "取消"
+        },
+        {
+            "id": "Name",
+            "message": "Name",
+            "translation": "名称"
+        },
+        {
+            "id": "Value",
+            "message": "Value",
+            "translation": "值"
+        },
+        {
+            "id": "Add",
+            "message": "Add",
+            "translation": "添加"
+        },
+        {
+            "id": "Delete",
+            "message": "Delete",
+            "translation": "删除"
+        },
+        {
+            "id": "Clear All",
+            "message": "Clear All",
+            "translation": "全部清除"
         },
         {
             "id": "Configuration",
@@ -232,6 +257,11 @@
             "translation": "仅通用配置"
         },
         {
+            "id": "Import Config",
+            "message": "Import Config",
+            "translation": "导入配置"
+        },
+        {
             "id": "Import from File",
             "message": "Import from File",
             "translation": "从文件导入"
@@ -247,6 +277,11 @@
             "translation": "从剪贴板导入"
         },
         {
+            "id": "NAT Discovery",
+            "message": "NAT Discovery",
+            "translation": "NAT 检测"
+        },
+        {
             "id": "Copy Share Link",
             "message": "Copy Share Link",
             "translation": "复制分享链接"
@@ -257,11 +292,6 @@
             "translation": "导出所有配置 (ZIP 压缩包)"
         },
         {
-            "id": "Delete",
-            "message": "Delete",
-            "translation": "删除"
-        },
-        {
             "id": "New Config",
             "message": "New Config",
             "translation": "新建配置"
@@ -270,11 +300,6 @@
             "id": "Manual Settings",
             "message": "Manual Settings",
             "translation": "手动设置"
-        },
-        {
-            "id": "Import Config",
-            "message": "Import Config",
-            "translation": "导入配置"
         },
         {
             "id": "Imported {Imported} of {Total} configs.",
@@ -385,11 +410,6 @@
             "translation": "基本"
         },
         {
-            "id": "Name",
-            "message": "Name",
-            "translation": "名称"
-        },
-        {
             "id": "Server Address",
             "message": "Server Address",
             "translation": "服务器地址"
@@ -403,6 +423,11 @@
             "id": "User",
             "message": "User",
             "translation": "用户名"
+        },
+        {
+            "id": "STUN Server",
+            "message": "STUN Server",
+            "translation": "STUN 服务"
         },
         {
             "id": "Auth",
@@ -432,12 +457,12 @@
         {
             "id": "Audience",
             "message": "Audience",
-            "translation": "接收者"
+            "translation": "受众"
         },
         {
             "id": "Scope",
             "message": "Scope",
-            "translation": "作用域"
+            "translation": "范围"
         },
         {
             "id": "Token Endpoint",
@@ -445,9 +470,9 @@
             "translation": "令牌地址"
         },
         {
-            "id": "Authentication",
-            "message": "Authentication",
-            "translation": "鉴权"
+            "id": "Parameters",
+            "message": "Parameters",
+            "translation": "参数"
         },
         {
             "id": "Heart Beats",
@@ -490,6 +515,11 @@
             "translation": "最大天数"
         },
         {
+            "id": "Days",
+            "message": "Days",
+            "translation": "天"
+        },
+        {
             "id": "Admin",
             "message": "Admin",
             "translation": "管理"
@@ -498,11 +528,6 @@
             "id": "Admin Address",
             "message": "Admin Address",
             "translation": "管理地址"
-        },
-        {
-            "id": "Admin Port",
-            "message": "Admin Port",
-            "translation": "管理端口"
         },
         {
             "id": "Password",
@@ -518,6 +543,11 @@
             "id": "Select a local directory that the admin server will load resources from.",
             "message": "Select a local directory that the admin server will load resources from.",
             "translation": "选择管理服务器使用的静态资源目录。"
+        },
+        {
+            "id": "Other Options",
+            "message": "Other Options",
+            "translation": "其他选项"
         },
         {
             "id": "Auto Delete",
@@ -545,9 +575,9 @@
             "translation": "删除天数"
         },
         {
-            "id": "Days",
-            "message": "Days",
-            "translation": "天"
+            "id": "s",
+            "message": "s",
+            "translation": "秒"
         },
         {
             "id": "Connection",
@@ -560,34 +590,9 @@
             "translation": "协议"
         },
         {
-            "id": "HTTP Proxy",
-            "message": "HTTP Proxy",
-            "translation": "HTTP 代理"
-        },
-        {
-            "id": "Pool Count",
-            "message": "Pool Count",
-            "translation": "连接池数量"
-        },
-        {
-            "id": "Heartbeat",
-            "message": "Heartbeat",
-            "translation": "心跳"
-        },
-        {
-            "id": "Interval",
-            "message": "Interval",
-            "translation": "间隔"
-        },
-        {
-            "id": "s",
-            "message": "s",
-            "translation": "秒"
-        },
-        {
-            "id": "Timeout",
-            "message": "Timeout",
-            "translation": "超时"
+            "id": "Advanced Options",
+            "message": "Advanced Options",
+            "translation": "高级选项"
         },
         {
             "id": "Dial Timeout",
@@ -605,9 +610,29 @@
             "translation": "闲置超时"
         },
         {
+            "id": "Pool Count",
+            "message": "Pool Count",
+            "translation": "连接池数量"
+        },
+        {
             "id": "Max Streams",
             "message": "Max Streams",
             "translation": "最大流数量"
+        },
+        {
+            "id": "Heartbeat",
+            "message": "Heartbeat",
+            "translation": "心跳"
+        },
+        {
+            "id": "Interval",
+            "message": "Interval",
+            "translation": "间隔"
+        },
+        {
+            "id": "Timeout",
+            "message": "Timeout",
+            "translation": "超时"
         },
         {
             "id": "On",
@@ -655,19 +680,14 @@
             "translation": "选择受信任的证书"
         },
         {
+            "id": "Disable custom first byte",
+            "message": "Disable custom first byte",
+            "translation": "禁用自定义首字节"
+        },
+        {
             "id": "Advanced",
             "message": "Advanced",
             "translation": "高级"
-        },
-        {
-            "id": "TCP Mux",
-            "message": "TCP Mux",
-            "translation": "多路复用"
-        },
-        {
-            "id": "Mux Keepalive",
-            "message": "Mux Keepalive",
-            "translation": "复用器心跳"
         },
         {
             "id": "Source Address",
@@ -675,9 +695,9 @@
             "translation": "使用源地址"
         },
         {
-            "id": "Other Options",
-            "message": "Other Options",
-            "translation": "其他选项"
+            "id": "TCP Mux",
+            "message": "TCP Mux",
+            "translation": "多路复用"
         },
         {
             "id": "Exit after login failure",
@@ -690,19 +710,39 @@
             "translation": "禁用开机自启动"
         },
         {
-            "id": "Custom",
-            "message": "Custom",
-            "translation": "自定义"
+            "id": "Use legacy format config file",
+            "message": "Use legacy format config file",
+            "translation": "使用旧格式配置文件"
         },
         {
-            "id": "Custom Options",
-            "message": "Custom Options",
-            "translation": "自定义参数"
+            "id": "Metadata",
+            "message": "Metadata",
+            "translation": "元数据"
         },
         {
-            "id": "* Refer to the [common] section of the FRP configuration file.",
-            "message": "* Refer to the [common] section of the FRP configuration file.",
-            "translation": "* 参考 FRP 配置文件的 [common] 部分。"
+            "id": "Experimental Features",
+            "message": "Experimental Features",
+            "translation": "实验性功能"
+        },
+        {
+            "id": "* The following features may affect the stability of the service.",
+            "message": "* The following features may affect the stability of the service.",
+            "translation": "* 以下功能可能会影响服务的稳定性。"
+        },
+        {
+            "id": "Use server SVCB records",
+            "message": "Use server SVCB records",
+            "translation": "使用服务器 SVCB 记录"
+        },
+        {
+            "id": "HTTP Proxy",
+            "message": "HTTP Proxy",
+            "translation": "HTTP 代理"
+        },
+        {
+            "id": "UDP Packet Size",
+            "message": "UDP Packet Size",
+            "translation": "UDP 包大小"
         },
         {
             "id": "Config already exists",
@@ -721,6 +761,21 @@
                     "underlyingType": "string",
                     "argNum": 1,
                     "expr": "name"
+                }
+            ]
+        },
+        {
+            "id": "Unable to upgrade your config file due to proxy conversion failure, please check the proxy config and try again.\n\nBad proxy: {Name}",
+            "message": "Unable to upgrade your config file due to proxy conversion failure, please check the proxy config and try again.\n\nBad proxy: {Name}",
+            "translation": "由于代理转换失败，无法升级您的配置文件，请检查代理配置并重试。\n\n出错的代理：{Name}",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "v.Name"
                 }
             ]
         },
@@ -745,6 +800,11 @@
             ]
         },
         {
+            "id": "Annotations",
+            "message": "Annotations",
+            "translation": "注释"
+        },
+        {
             "id": "Random",
             "message": "Random",
             "translation": "随机名称"
@@ -755,9 +815,24 @@
             "translation": "类型"
         },
         {
+            "id": "Request headers",
+            "message": "Request headers",
+            "translation": "请求头"
+        },
+        {
+            "id": "Response headers",
+            "message": "Response headers",
+            "translation": "响应头"
+        },
+        {
             "id": "Role",
             "message": "Role",
             "translation": "角色"
+        },
+        {
+            "id": "Server",
+            "message": "Server",
+            "translation": "服务端"
         },
         {
             "id": "Visitor",
@@ -785,6 +860,11 @@
             "translation": "远程端口"
         },
         {
+            "id": "Allow Users",
+            "message": "Allow Users",
+            "translation": "允许用户"
+        },
+        {
             "id": "Bind Address",
             "message": "Bind Address",
             "translation": "绑定地址"
@@ -798,6 +878,11 @@
             "id": "Server Name",
             "message": "Server Name",
             "translation": "服务名称"
+        },
+        {
+            "id": "Server User",
+            "message": "Server User",
+            "translation": "服务用户"
         },
         {
             "id": "Subdomain",
@@ -830,24 +915,29 @@
             "translation": "客户端"
         },
         {
-            "id": "Server",
-            "message": "Server",
-            "translation": "服务端"
-        },
-        {
             "id": "Bandwidth",
             "message": "Bandwidth",
             "translation": "带宽限流"
         },
         {
-            "id": "Proxy Version",
-            "message": "Proxy Version",
-            "translation": "代理版本"
+            "id": "Proxy Protocol",
+            "message": "Proxy Protocol",
+            "translation": "代理协议"
         },
         {
-            "id": "Empty",
-            "message": "Empty",
-            "translation": "空"
+            "id": "auto",
+            "message": "auto",
+            "translation": "自动"
+        },
+        {
+            "id": "default",
+            "message": "default",
+            "translation": "默认"
+        },
+        {
+            "id": "Keep Tunnel",
+            "message": "Keep Tunnel",
+            "translation": "保持隧道"
         },
         {
             "id": "Encryption",
@@ -858,6 +948,36 @@
             "id": "Compression",
             "message": "Compression",
             "translation": "压缩传输"
+        },
+        {
+            "id": "Fallback",
+            "message": "Fallback",
+            "translation": "备用"
+        },
+        {
+            "id": "Fallback Timeout",
+            "message": "Fallback Timeout",
+            "translation": "备用超时"
+        },
+        {
+            "id": "ms",
+            "message": "ms",
+            "translation": "毫秒"
+        },
+        {
+            "id": "Retry Count",
+            "message": "Retry Count",
+            "translation": "重试次数"
+        },
+        {
+            "id": "Times/Hour",
+            "message": "Times/Hour",
+            "translation": "次/小时"
+        },
+        {
+            "id": "Retry Interval",
+            "message": "Retry Interval",
+            "translation": "重试间隔"
         },
         {
             "id": "HTTP User",
@@ -940,19 +1060,14 @@
             "translation": "检查超时"
         },
         {
-            "id": "Failure Count",
-            "message": "Failure Count",
-            "translation": "错误次数"
-        },
-        {
             "id": "Check Interval",
             "message": "Check Interval",
             "translation": "检查周期"
         },
         {
-            "id": "* Refer to the parameters supported by FRP.",
-            "message": "* Refer to the parameters supported by FRP.",
-            "translation": "* 参考 FRP 支持的参数。"
+            "id": "Failure Count",
+            "message": "Failure Count",
+            "translation": "错误次数"
         },
         {
             "id": "Proxy already exists",
@@ -975,6 +1090,76 @@
             ]
         },
         {
+            "id": "Server name is required.",
+            "message": "Server name is required.",
+            "translation": "必须填写服务名称。"
+        },
+        {
+            "id": "Bind port is required.",
+            "message": "Bind port is required.",
+            "translation": "必须填写绑定端口。"
+        },
+        {
+            "id": "Requires local port or plugin.",
+            "message": "Requires local port or plugin.",
+            "translation": "必须填写本地端口或插件。"
+        },
+        {
+            "id": "Local address is required.",
+            "message": "Local address is required.",
+            "translation": "必须填写本地地址。"
+        },
+        {
+            "id": "Local path is required.",
+            "message": "Local path is required.",
+            "translation": "必须填写本地路径。"
+        },
+        {
+            "id": "Unix path is required.",
+            "message": "Unix path is required.",
+            "translation": "必须填写 Unix 路径。"
+        },
+        {
+            "id": "Invalid local port.",
+            "message": "Invalid local port.",
+            "translation": "无效的本地端口。"
+        },
+        {
+            "id": "Health check url is required.",
+            "message": "Health check url is required.",
+            "translation": "健康检查 URL 为必填项。"
+        },
+        {
+            "id": "The plugin does not support range ports.",
+            "message": "The plugin does not support range ports.",
+            "translation": "插件不支持范围端口。"
+        },
+        {
+            "id": "Invalid remote port.",
+            "message": "Invalid remote port.",
+            "translation": "无效的远程端口。"
+        },
+        {
+            "id": "The number of local ports should be the same as the number of remote ports.",
+            "message": "The number of local ports should be the same as the number of remote ports.",
+            "translation": "本地端口的数量应与远程端口的数量相同。"
+        },
+        {
+            "id": "Custom domains and subdomain should have at least one of these set.",
+            "message": "Custom domains and subdomain should have at least one of these set.",
+            "translation": "自定义域名和子域名应至少填写其中之一。"
+        },
+        {
+            "id": "Copy",
+            "message": "Copy",
+            "translation": "复制"
+        },
+        {
+            "id": "Select all",
+            "message": "Select all",
+            "translation": "全选"
+        },
+        {
             "id": "Open Log Folder",
             "message": "Open Log Folder",
             "translation": "打开日志文件夹"
@@ -983,6 +1168,41 @@
             "id": "Latest",
             "message": "Latest",
             "translation": "最新"
+        },
+        {
+            "id": "Item",
+            "message": "Item",
+            "translation": "项目"
+        },
+        {
+            "id": "NAT Type",
+            "message": "NAT Type",
+            "translation": "NAT 类型"
+        },
+        {
+            "id": "Behavior",
+            "message": "Behavior",
+            "translation": "行为"
+        },
+        {
+            "id": "External Address",
+            "message": "External Address",
+            "translation": "外部地址"
+        },
+        {
+            "id": "Yes",
+            "message": "Yes",
+            "translation": "是"
+        },
+        {
+            "id": "No",
+            "message": "No",
+            "translation": "否"
+        },
+        {
+            "id": "Public Network",
+            "message": "Public Network",
+            "translation": "公网"
         },
         {
             "id": "Unknown",
@@ -1020,11 +1240,6 @@
             "translation": "远程地址"
         },
         {
-            "id": "Copy",
-            "message": "Copy",
-            "translation": "复制"
-        },
-        {
             "id": "Start",
             "message": "Start",
             "translation": "启动"
@@ -1035,6 +1250,36 @@
             "translation": "服务"
         },
         {
+            "id": "Stop config \"{Name}\"",
+            "message": "Stop config \"{Name}\"",
+            "translation": "停止配置「{Name}」",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "conf.Name"
+                }
+            ]
+        },
+        {
+            "id": "Are you sure you would like to stop config \"{Name}\"?",
+            "message": "Are you sure you would like to stop config \"{Name}\"?",
+            "translation": "确定要停止配置「{Name}」吗？",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "conf.Name"
+                }
+            ]
+        },
+        {
             "id": "Stop",
             "message": "Stop",
             "translation": "停止"
@@ -1043,11 +1288,6 @@
             "id": "Local Directory",
             "message": "Local Directory",
             "translation": "本地目录"
-        },
-        {
-            "id": "Add",
-            "message": "Add",
-            "translation": "添加"
         },
         {
             "id": "Port",
@@ -1165,19 +1405,19 @@
             "translation": "HTTP 文件服务"
         },
         {
-            "id": "Enable",
-            "message": "Enable",
-            "translation": "启用"
+            "id": "Disable",
+            "message": "Disable",
+            "translation": "禁用"
         },
         {
-            "id": "Open Config",
-            "message": "Open Config",
-            "translation": "打开配置文件"
+            "id": "Move Up",
+            "message": "Move Up",
+            "translation": "上移"
         },
         {
-            "id": "Direct Edit",
-            "message": "Direct Edit",
-            "translation": "直接编辑"
+            "id": "Move Down",
+            "message": "Move Down",
+            "translation": "下移"
         },
         {
             "id": "Domains",
@@ -1185,9 +1425,39 @@
             "translation": "域名"
         },
         {
+            "id": "Move",
+            "message": "Move",
+            "translation": "移动"
+        },
+        {
+            "id": "Up",
+            "message": "Up",
+            "translation": "上移"
+        },
+        {
+            "id": "Down",
+            "message": "Down",
+            "translation": "下移"
+        },
+        {
+            "id": "To Top",
+            "message": "To Top",
+            "translation": "置顶"
+        },
+        {
+            "id": "To Bottom",
+            "message": "To Bottom",
+            "translation": "置底"
+        },
+        {
             "id": "Copy Access Address",
             "message": "Copy Access Address",
             "translation": "复制访问地址"
+        },
+        {
+            "id": "This feature only supports text in INI or TOML format.",
+            "message": "This feature only supports text in INI or TOML format.",
+            "translation": "此功能仅支持 INI 或 TOML 格式的文本。"
         },
         {
             "id": "Delete proxy \"{Name}\"",
@@ -1250,9 +1520,9 @@
             ]
         },
         {
-            "id": "Disable",
-            "message": "Disable",
-            "translation": "禁用"
+            "id": "Enable",
+            "message": "Enable",
+            "translation": "启用"
         },
         {
             "id": "Passive Port Range",

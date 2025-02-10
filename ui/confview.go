@@ -7,17 +7,19 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
+
+	"github.com/lxn/walk"
+	. "github.com/lxn/walk/declarative"
+	"github.com/samber/lo"
 
 	"github.com/koho/frpmgr/i18n"
 	"github.com/koho/frpmgr/pkg/config"
 	"github.com/koho/frpmgr/pkg/consts"
 	"github.com/koho/frpmgr/pkg/layout"
+	"github.com/koho/frpmgr/pkg/res"
 	"github.com/koho/frpmgr/pkg/util"
-
-	"github.com/lxn/walk"
-	. "github.com/lxn/walk/declarative"
-	"github.com/thoas/go-funk"
 )
 
 type ConfView struct {
@@ -44,11 +46,14 @@ func NewConfView() *ConfView {
 }
 
 func (cv *ConfView) View() Widget {
+	moveUpCond := Bind("confView.CurrentIndex > 0")
+	moveDownCond := Bind("confView.CurrentIndex >= 0 && confView.CurrentIndex < confView.ItemCount - 1")
 	return Composite{
 		AssignTo: &cv.Composite,
 		Layout:   VBox{MarginsZero: true, SpacingZero: true},
 		Children: []Widget{
 			TableView{
+				Name:                "confView",
 				AssignTo:            &cv.listView,
 				LastColumnStretched: true,
 				HeaderHidden:        true,
@@ -60,6 +65,40 @@ func (cv *ConfView) View() Widget {
 						Text:        i18n.Sprintf("Edit"),
 						Enabled:     Bind("conf.Selected"),
 						OnTriggered: cv.editCurrent,
+					},
+					Menu{
+						Text:    i18n.Sprintf("Move"),
+						Enabled: Bind("confView.CurrentIndex >= 0 && confView.ItemCount > 1"),
+						Items: []MenuItem{
+							Action{
+								Text:    i18n.Sprintf("Up"),
+								Enabled: moveUpCond,
+								OnTriggered: func() {
+									cv.onMove(-1)
+								},
+							},
+							Action{
+								Text:    i18n.Sprintf("Down"),
+								Enabled: moveDownCond,
+								OnTriggered: func() {
+									cv.onMove(1)
+								},
+							},
+							Action{
+								Text:    i18n.Sprintf("To Top"),
+								Enabled: moveUpCond,
+								OnTriggered: func() {
+									cv.onMove(-cv.listView.CurrentIndex())
+								},
+							},
+							Action{
+								Text:    i18n.Sprintf("To Bottom"),
+								Enabled: moveDownCond,
+								OnTriggered: func() {
+									cv.onMove(len(cv.model.items) - cv.listView.CurrentIndex() - 1)
+								},
+							},
+						},
 					},
 					Action{Text: i18n.Sprintf("Open File"),
 						Enabled:     Bind("conf.Selected"),
@@ -80,9 +119,19 @@ func (cv *ConfView) View() Widget {
 							Action{Text: i18n.Sprintf("Common Only"), OnTriggered: func() { cv.editCopy(false) }},
 						},
 					},
-					Action{Text: i18n.SprintfEllipsis("Import from File"), OnTriggered: cv.onFileImport},
-					Action{Text: i18n.SprintfEllipsis("Import from URL"), OnTriggered: cv.onURLImport},
-					Action{Text: i18n.Sprintf("Import from Clipboard"), OnTriggered: cv.onClipboardImport},
+					Menu{
+						Text: i18n.Sprintf("Import Config"),
+						Items: []MenuItem{
+							Action{Text: i18n.SprintfEllipsis("Import from File"), OnTriggered: cv.onFileImport},
+							Action{Text: i18n.SprintfEllipsis("Import from URL"), OnTriggered: cv.onURLImport},
+							Action{Text: i18n.Sprintf("Import from Clipboard"), OnTriggered: cv.onClipboardImport},
+						},
+					},
+					Separator{},
+					Action{
+						Text:        i18n.Sprintf("NAT Discovery"),
+						OnTriggered: cv.onNATDiscovery,
+					},
 					Separator{},
 					Action{
 						Text:        i18n.Sprintf("Copy Share Link"),
@@ -108,7 +157,7 @@ func (cv *ConfView) View() Widget {
 					}
 					conf := cv.model.items[row]
 					if !conf.Data.AutoStart() {
-						style.TextColor = consts.ColorBlue
+						style.TextColor = res.ColorBlue
 					}
 					margin := cv.listView.IntFrom96DPI(1)
 					bitmapWidth := cv.listView.IntFrom96DPI(16)
@@ -150,27 +199,27 @@ func (cv *ConfView) View() Widget {
 							Menu{
 								OnTriggered: cv.editNew,
 								Text:        i18n.Sprintf("New Config"),
-								Image:       loadSysIcon("shell32", consts.IconNewConf, 16),
+								Image:       loadIcon(res.IconNewConf, 16),
 								Items: []MenuItem{
 									Action{
 										AssignTo:    &cv.tbAddAction,
 										Text:        i18n.Sprintf("Manual Settings"),
-										Image:       loadSysIcon("shell32", consts.IconCreate, 16),
+										Image:       loadIcon(res.IconCreate, 16),
 										OnTriggered: cv.editNew,
 									},
 									Action{
 										Text:        i18n.SprintfEllipsis("Import from File"),
-										Image:       loadSysIcon("shell32", consts.IconFileImport, 16),
+										Image:       loadIcon(res.IconFileImport, 16),
 										OnTriggered: cv.onFileImport,
 									},
 									Action{
 										Text:        i18n.SprintfEllipsis("Import from URL"),
-										Image:       loadSysIcon("imageres", consts.IconURLImport, 16),
+										Image:       loadIcon(res.IconURLImport, 16),
 										OnTriggered: cv.onURLImport,
 									},
 									Action{
 										Text:        i18n.Sprintf("Import from Clipboard"),
-										Image:       loadSysIcon("shell32", consts.IconClipboard, 16),
+										Image:       loadIcon(res.IconClipboard, 16),
 										OnTriggered: cv.onClipboardImport,
 									},
 								},
@@ -179,14 +228,14 @@ func (cv *ConfView) View() Widget {
 							Action{
 								Enabled:     Bind("conf.Selected"),
 								AssignTo:    &cv.tbDeleteAction,
-								Image:       loadSysIcon("shell32", consts.IconDelete, 16),
+								Image:       loadIcon(res.IconDelete, 16),
 								OnTriggered: cv.onDelete,
 							},
 							Separator{},
 							Action{
 								Enabled:     Bind("conf.Selected"),
 								AssignTo:    &cv.tbExportAction,
-								Image:       loadSysIcon("imageres", consts.IconExport, 16),
+								Image:       loadIcon(res.IconExport, 16),
 								OnTriggered: cv.onExport,
 							},
 						},
@@ -253,7 +302,11 @@ func (cv *ConfView) onEditConf(conf *Conf, name string) {
 			confDB.Reset()
 		}
 		// Commit the config
-		commitConf(dlg.Conf, dlg.ShouldRestart)
+		flag := runFlagAuto
+		if dlg.ShouldRestart {
+			flag = runFlagForceStart
+		}
+		commitConf(dlg.Conf, flag)
 	}
 }
 
@@ -271,16 +324,17 @@ func (cv *ConfView) onURLImport() {
 			} else {
 				total++
 				if newPath, ok := cv.checkConfName(item.Filename, item.Rename); ok {
-					conf, err := config.UnmarshalClientConfFromIni(item.Data)
+					conf, err := config.UnmarshalClientConf(item.Data)
 					if err != nil {
 						showError(err, cv.Form())
 						continue
 					}
-					if err = os.WriteFile(newPath, item.Data, 0666); err != nil {
+					cfg := NewConf(newPath, conf)
+					if err = cfg.Save(); err != nil {
 						showError(err, cv.Form())
 						continue
 					}
-					addConf(NewConf(newPath, conf))
+					addConf(cfg)
 					imported++
 				}
 			}
@@ -292,10 +346,11 @@ func (cv *ConfView) onURLImport() {
 func (cv *ConfView) checkConfName(filename string, rename bool) (string, bool) {
 	suffix := ""
 checkName:
-	newPath := PathOfConf(util.AddFileSuffix(filename, suffix))
+	baseName, _ := util.SplitExt(util.AddFileSuffix(filename, suffix))
+	newPath := PathOfConf(baseName + ".conf")
 	if _, err := os.Stat(newPath); err == nil {
 		if rename {
-			suffix = "_" + funk.RandomString(4)
+			suffix = "_" + lo.RandomString(4, lo.AlphanumericCharset)
 			goto checkName
 		}
 		return newPath, false
@@ -305,7 +360,7 @@ checkName:
 
 func (cv *ConfView) onFileImport() {
 	dlg := walk.FileDialog{
-		Filter: consts.FilterConfig + consts.FilterAllFiles,
+		Filter: res.FilterConfig + res.FilterAllFiles,
 		Title:  i18n.Sprintf("Import from File"),
 	}
 
@@ -335,8 +390,12 @@ func (cv *ConfView) ImportFiles(files []string) {
 			if dir, err := util.IsDirectory(path); err != nil || dir {
 				continue
 			}
-			switch strings.ToLower(filepath.Ext(path)) {
-			case ".ini":
+			ext := strings.ToLower(filepath.Ext(path))
+			if ext == ".zip" {
+				subTotal, subImported := cv.importZip(path, nil, false)
+				total += subTotal
+				imported += subImported
+			} else if slices.Contains(res.SupportedConfigFormats, ext) {
 				total++
 				newPath, ok := cv.checkConfName(path, false)
 				if !ok {
@@ -346,22 +405,18 @@ func (cv *ConfView) ImportFiles(files []string) {
 						i18n.Sprintf("Another config already exists with the name \"%s\".", baseName))
 					continue
 				}
-				// Verify config before copying file
-				conf, err := config.UnmarshalClientConfFromIni(path)
+				conf, err := config.UnmarshalClientConf(path)
 				if err != nil {
 					showError(err, cv.Form())
 					continue
 				}
-				if _, err = util.CopyFile(path, newPath); err != nil {
+				cfg := NewConf(newPath, conf)
+				if err = cfg.Save(); err != nil {
 					showError(err, cv.Form())
 					continue
 				}
-				addConf(NewConf(newPath, conf))
+				addConf(cfg)
 				imported++
-			case ".zip":
-				subTotal, subImported := cv.importZip(path, nil, false)
-				total += subTotal
-				imported += subImported
 			}
 		}
 		return
@@ -379,19 +434,15 @@ func (cv *ConfView) importZip(path string, data []byte, rename bool) (total, imp
 		if err != nil {
 			return err
 		}
-		conf, err := config.UnmarshalClientConfFromIni(src)
+		conf, err := config.UnmarshalClientConf(src)
 		if err != nil {
 			return err
 		}
-		fw, err := os.OpenFile(dst, os.O_CREATE|os.O_RDWR|os.O_TRUNC, file.Mode())
-		if err != nil {
+		cfg := NewConf(dst, conf)
+		if err = cfg.Save(); err != nil {
 			return err
 		}
-		defer fw.Close()
-		if _, err = fw.Write(src); err != nil {
-			return err
-		}
-		addConf(NewConf(dst, conf))
+		addConf(cfg)
 		return nil
 	}
 	var zr *zip.Reader
@@ -415,7 +466,7 @@ func (cv *ConfView) importZip(path string, data []byte, rename bool) (total, imp
 		if file.FileInfo().IsDir() {
 			continue
 		}
-		if strings.ToLower(filepath.Ext(file.Name)) != ".ini" {
+		if !slices.Contains(res.SupportedConfigFormats, strings.ToLower(filepath.Ext(file.Name))) {
 			continue
 		}
 		total++
@@ -438,8 +489,8 @@ func (cv *ConfView) onClipboardImport() {
 	}
 	var name string
 	// Check for a share link
-	if strings.HasPrefix(text, consts.ShareLinkScheme) {
-		text = strings.TrimPrefix(text, consts.ShareLinkScheme)
+	if strings.HasPrefix(text, res.ShareLinkScheme) {
+		text = strings.TrimPrefix(text, res.ShareLinkScheme)
 		content, err := base64.StdEncoding.DecodeString(text)
 		if err != nil {
 			showError(err, cv.Form())
@@ -451,7 +502,7 @@ func (cv *ConfView) onClipboardImport() {
 			name = string(bytes.TrimSpace(content[1:i]))
 		}
 	}
-	conf, err := config.UnmarshalClientConfFromIni([]byte(text))
+	conf, err := config.UnmarshalClientConf([]byte(text))
 	if err != nil {
 		showError(err, cv.Form())
 		return
@@ -468,7 +519,7 @@ func (cv *ConfView) onCopyShareLink() {
 		}
 		// Insert the config name in the first line
 		content = append([]byte("# "+conf.Name+"\n"), content...)
-		walk.Clipboard().SetText(consts.ShareLinkScheme + base64.StdEncoding.EncodeToString(content))
+		walk.Clipboard().SetText(res.ShareLinkScheme + base64.StdEncoding.EncodeToString(content))
 	}
 }
 
@@ -488,7 +539,7 @@ func (cv *ConfView) onDelete() {
 	if conf := getCurrentConf(); conf != nil {
 		if walk.MsgBox(cv.Form(), i18n.Sprintf("Delete config \"%s\"", conf.Name),
 			i18n.Sprintf("Are you sure you would like to delete config \"%s\"?", conf.Name),
-			walk.MsgBoxOKCancel|walk.MsgBoxIconWarning) == walk.DlgCmdCancel {
+			walk.MsgBoxYesNo|walk.MsgBoxIconWarning) == walk.DlgCmdNo {
 			return
 		}
 		if !hasConf(conf.Name) {
@@ -506,7 +557,7 @@ func (cv *ConfView) onDelete() {
 
 func (cv *ConfView) onExport() {
 	dlg := walk.FileDialog{
-		Filter: consts.FilterZip,
+		Filter: res.FilterZip,
 		Title:  i18n.Sprintf("Export All Configs to ZIP"),
 	}
 
@@ -517,30 +568,64 @@ func (cv *ConfView) onExport() {
 	if !strings.HasSuffix(dlg.FilePath, ".zip") {
 		dlg.FilePath += ".zip"
 	}
-
-	files := funk.Map(confList, func(conf *Conf) string {
-		return conf.Path
+	files := lo.SliceToMap(confList, func(conf *Conf) (string, string) {
+		return conf.Path, conf.Name + conf.Data.Ext()
 	})
-	if err := util.ZipFiles(dlg.FilePath, files.([]string)); err != nil {
+	if err := util.ZipFiles(dlg.FilePath, files); err != nil {
 		showError(err, cv.Form())
 	}
+}
+
+func (cv *ConfView) onNATDiscovery() {
+	var stunServer string
+	// Try to use the address in config first
+	if conf := getCurrentConf(); conf != nil {
+		stunServer = conf.Data.GetSTUNServer()
+	}
+	if stunServer == "" {
+		if appConf.Defaults.NatHoleSTUNServer != "" {
+			stunServer = appConf.Defaults.NatHoleSTUNServer
+		} else {
+			stunServer = consts.DefaultSTUNServer
+		}
+	}
+	if _, err := NewNATDiscoveryDialog(stunServer).Run(cv.Form()); err != nil {
+		showError(err, cv.Form())
+	}
+}
+
+func (cv *ConfView) onMove(delta int) {
+	curIdx := cv.listView.CurrentIndex()
+	if curIdx < 0 || curIdx >= len(cv.model.items) {
+		return
+	}
+	targetIdx := curIdx + delta
+	if targetIdx < 0 || targetIdx >= len(cv.model.items) {
+		return
+	}
+	confMutex.Lock()
+	cv.model.Move(curIdx, targetIdx)
+	setConfOrder()
+	confMutex.Unlock()
+	saveAppConfig()
+	cv.listView.SetCurrentIndex(targetIdx)
 }
 
 // reset config listview with selected name
 func (cv *ConfView) reset(selectName string) {
 	// Make sure `sel` is a valid index
-	sel := funk.MaxInt([]int{cv.listView.CurrentIndex(), 0})
+	sel := max(cv.listView.CurrentIndex(), 0)
 	// Refresh the whole config list
 	// The confList will be sorted
 	cv.model = NewConfListModel(confList)
 	cv.listView.SetModel(cv.model)
 	if selectName != "" {
-		if idx := funk.IndexOf(cv.model.items, func(conf *Conf) bool { return conf.Name == selectName }); idx >= 0 {
+		if idx := slices.IndexFunc(cv.model.items, func(conf *Conf) bool { return conf.Name == selectName }); idx >= 0 {
 			sel = idx
 		}
 	}
 	// Make sure the final selected index is valid
-	if selectIdx := funk.MinInt([]int{sel, len(cv.model.items) - 1}); selectIdx >= 0 {
+	if selectIdx := min(sel, len(cv.model.items)-1); selectIdx >= 0 {
 		cv.listView.SetCurrentIndex(selectIdx)
 	}
 }
